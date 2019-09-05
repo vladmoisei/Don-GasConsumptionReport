@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,6 +32,9 @@ namespace Don_GasConsumtionReport
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // @"Server=172.16.4.165\SQLEXPRESS;Database=ColctareDataAjustajDatabase;
+            services.AddDbContext<RaportareDbContext>(options =>
+            options.UseSqlServer(@"Server=.\SQLEXPRESS;Database=ConsumGazDatabase;User Id=sa; Password=Calarasi81; MultipleActiveResultSets=true;"));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

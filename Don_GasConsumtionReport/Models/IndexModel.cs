@@ -9,7 +9,7 @@ namespace Don_GasConsumtionReport
     {
         public int Id { get; set; }
         public string Data { get; set; }
-        public string PlcNAme { get; set; }
+        public string PlcName { get; set; }
         public int IndexValue { get; set; }
     }
 }
