@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Don_GasConsumtionReport
 {
@@ -36,11 +37,14 @@ namespace Don_GasConsumtionReport
             services.AddDbContext<RaportareDbContext>(options =>
             options.UseSqlServer(@"Server=.\SQLEXPRESS;Database=ConsumGazDatabase;User Id=sa; Password=Calarasi81; MultipleActiveResultSets=true;"));
 
+            //Adaug BackgroundService
+            services.AddSingleton<IHostedService, BackgroundService>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
