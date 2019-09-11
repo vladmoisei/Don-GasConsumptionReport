@@ -3,6 +3,123 @@
 }
 
 
+<div class="container">
+    <section id="backgroundService">
+        <div class="row">
+            <h2>Background Service: <span id="textIsBackgroundServiceStarted">Run/Stop</span></h2>
+        </div>
+        <div class="row">
+            <h4 id="ceas">Ceas: </h4>
+            <h4>Service is Started:  @ViewBag.ServiceIsStarted</h4>
+        </div>
+        <div class="row">
+            <div id="btnStartBackgroundService" class="col-md-6 btn btn-default">Start Backgorund Service</div>
+            <div id="btnStopBackgroundService" class="col-md-6 btn btn-default">Stop Backgorund Service</div>
+        </div>
+    </section>
+
+    <section id="plcService">
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Plc CuptorIP :172.16.4.104</h2>
+                @* - Avem clasa btn-default in conditii normale
+                    - Daca este creat Plc-ul Butonul Create are clasa btn-succes si Butonul Delete are clasa btn-danger
+                    - La fel si pentru cele de conectare/ deconectare Plc *@
+                <div id="btnCreatePlcCuptor" class="col-md-6 btn btn-default">Create Plc CuptorPc6</div>
+                <div id="btnDeletePlcCuptor" class="col-md-6 btn btn-default">Delete Plc CuptorPc6</div>
+                <div id="btnConnectPlcCuptor" class="col-md-6 btn btn-success">Connect Plc CuptorPc6</div>
+                <div id="btnDeconnectPlcCuptor" class="col-md-6 btn btn-danger">Deconnect Plc CuptorPc6</div>
+                <div id="btnIsConnectedPlcCuptor" class="col-md-6 btn btn-info">IsConnected Plc Cuptor</div>
+
+            </div>
+            <div class="col-md-4">
+                <h2>Plc GaddaF2 IP: 10.0.0.11</h2>
+                @* - Avem clasa btn-default in conditii normale
+                    - Daca este creat Plc-ul Butonul Create are clasa btn-succes si Butonul Delete are clasa btn-danger
+                    - La fel si pentru cele de conectare/ deconectare Plc *@
+                <div id="btnCreatePlcGaddaF2" class="col-md-6 btn btn-default">Create PlcGaddaF2</div>
+                <div id="btnDeletePlcGaddaF2" class="col-md-6 btn btn-default">Delete PlcGaddaF2</div>
+                <div id="btnConnectPlcGaddaF2" class="col-md-6 btn btn-success">Connect PlcGaddaF2</div>
+                <div id="btnDeconnectPlcGaddaF2" class="col-md-6 btn btn-danger">Deconnect PlcGaddaF2</div>
+                <div id="btnIsConnectedPlcGaddaF2" class="col-md-6 btn btn-default">IsConnected PlcGaddaF2</div>
+            </div>
+            <div class="col-md-4">
+                <h2>Plc GaddaF4 IP: 10.0.0.13</h2>
+                @* - Avem clasa btn-default in conditii normale
+                    - Daca este creat Plc-ul Butonul Create are clasa btn-succes si Butonul Delete are clasa btn-danger
+                    - La fel si pentru cele de conectare/ deconectare Plc *@
+                <div id="btnCreatePlcGaddaF4" class="col-md-6 btn btn-default">Create PlcGaddaF4</div>
+                <div id="btnDeletePlcGaddaF4" class="col-md-6 btn btn-default">Delete PlcGaddaF4</div>
+                <div id="btnConnectPlcGaddaF4" class="col-md-6 btn btn-success">Connect PlcGaddaF4</div>
+                <div id="btnDeconnectPlcGaddaF4" class="col-md-6 btn btn-danger">Deconnect PlcGaddaF4</div>
+                <div id="btnIsConnectedPlcGaddaF4" class="col-md-6 btn btn-default">IsConnected PlcGaddaF4</div>
+            </div>
+        </div>
+        <div class="row">
+
+        </div>
+    </section>
+    <section id="cuptorPropulsie">
+        <h2>Cuptor cu propulsie PC6</h2>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="row">
+                    <div id="btnSetareMailCuptor" class="col-md-2 btn btn-default">Seteaza</div>
+                    <h4 class="col-md-offset-1 col-md-9">Lista mail Cuptor cu propulsie:</h4>
+                    <input class="col-md-12" type="text" id="textBoxListaMailCuptor" />
+                </div>
+            </div>
+            <div class="col-md-offset-1 col-md-2">
+                <div class="row">
+                    <h4>Ora raport:</h4>
+                    <input class="" type="text" id="textBoxOraRaportCuptor" />
+                </div>
+            </div>
+            <p>Ultimul index citit: <strong><span id="textIndexCuptorUltim">000</span></strong></p>
+            <p>Ultimul consum gaz inregistrat: <strong><span id="textConsumCuptorUltim">123</span></strong></p>
+        </div>
+    </section>
+
+    <section id="cuptorGadda">
+        <h2>Cuptor Gadda</h2>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="row">
+                    <div id="btnSetareMailGadda" class="col-md-2 btn btn-default">Seteaza</div>
+                    <h4 class="col-md-offset-1 col-md-9">Lista mail Gadda:</h4>
+                    <input class="col-md-12" type="text" id="textBoxListaMailGadda" />
+                </div>
+            </div>
+            <div class="col-md-offset-1 col-md-2">
+                <div class="row">
+                    <h4>Ora raport:</h4>
+                    <input class="" type="text" id="textBoxOraRaportGadda" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Ultimul index citit GaddaF2: <strong><span id="textIndexGaddaF2Ultim">000</span></strong></p>
+                    <p>Ultimul consum gaz inregistrat GaddaF2: <strong><span id="textConsumGaddaF2Ultim">123</span></strong></p>
+                </div>
+                <div class="col-md-6">
+                    <p>Ultimul index citit GaddaF4: <strong><span id="textIndexGaddaF4Ultim">F4000</span></strong></p>
+                    <p>Ultimul consum gaz inregistrat GaddaF4: <strong><span id="textConsumGaddaF4Ultim">F4123</span></strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cuprins">
+        <h2>Cuprins:</h2>
+        <h4 class="row btn-link">Cuptor cu propuslie</h4>
+        <h4 class="row btn-link">Cuptor Gadda</h4>
+    </section>
+</div>
+
+
+
+
+
 <div id="btnStop" style="color: red">Stop Background Service</div>
 <div id="btnStart" style="color: green">Start Background Service</div>
 
@@ -15,46 +132,6 @@
     Valoare Incrementata: @ViewBag.Val
 </p>
 
-@section PlcService
-{
-    <script>
-
-        $(document).ready(function () {
-            console.log("Ruleaza Java Script");
-
-            var btnStop = document.getElementById("btnStop");
-            var btnStart = document.getElementById("btnStart");
-            // Buton Stop Click event
-            btnStop.addEventListener('click', function () {
-                alert("s-a apasat buton stop");
-                $.ajax({
-                    url: " /Home/StopBackGroundServiceAsync",
-                    type: 'GET',
-                    success: function (response) {
-                        console.log("S-a realizat Stop Async din buton");
-                    },
-                    error: function (response) {
-                        console.log("Nu a mers btn Stop Async");
-                    }
-
-                })
-            })
-            // Buton Start Click event
-            btnStart.addEventListener('click', function () {
-                alert("s-a apasat buton start");
-                $.ajax({
-                    url: " /Home/StartBackGroundServiceAsync",
-                    type: 'GET',
-                    success: function (response) {
-                        console.log("S-a realizat Start Async din buton");
-                    },
-                    error: function (response) {
-                        console.log("Nu a mers btn Start Async");
-                    }
-
-                })
-            })
-        })
-
-    </script>
+@section PlcService {
+<script src="~/js/PlcService.js"></script>
 }

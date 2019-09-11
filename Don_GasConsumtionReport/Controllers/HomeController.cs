@@ -37,7 +37,7 @@ namespace Don_GasConsumtionReport.Controllers
             return View();
         }
 
-
+        //  Stop BackgroundService      
         public async Task<IActionResult> StopBackGroundServiceAsync()
         {
             await _backGroundService.StopAsync(new System.Threading.CancellationToken());
@@ -45,9 +45,12 @@ namespace Don_GasConsumtionReport.Controllers
             return View("Index");
         }
 
+        // Start BackgroundService      
         public async Task<IActionResult> StartBackGroundServiceAsync()
         {
-            await _backGroundService.StartAsync(new System.Threading.CancellationToken());
+
+            if (!_backGroundService.IsStartedService)
+                await _backGroundService.StartAsync(new System.Threading.CancellationToken());
 
             return View("Index");
         }
