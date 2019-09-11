@@ -23,7 +23,7 @@ namespace Don_GasConsumtionReport
             return false;
         }
 
-        // Functie verificare daca exista PLC in lista in functie de nume
+        // Functie verificare daca exista PLC in lista in functie de ip
         public static bool IsCreatedPlcByIp(string ipPlc)
         {
             if (ListaPlc.Count > 0)
@@ -62,29 +62,40 @@ namespace Don_GasConsumtionReport
             return null;
         }
 
+        // IP-uri PLC: "172.16.4.104" "10.0.0.11" "10.0.0.13"
         //Functie creare Plc 
         public static void CreatePlc(string plcName, S7.Net.CpuType cpuType, string ip, short rack, short slot)
         {
-            if ()
+            // Verificare daca daca exista plc Creat in lista
+            if (IsCreatedPlcByIp(ip) || IsCreatedPlcByName(plcName)) return;
+            // Creaza plc nou in lista
             ListaPlc.Add(new PlcObjectModel(plcName, cpuType, ip, rack, slot));
         }
 
-        //Functie creare Plc Cuptor cu propulsie Pc6
-        public static void CreatePlcCuptor()
+        // Functie stergere Plc dupa nume
+        public static void DeletePlc(string numePlc)
         {
-            ListaPlc.Add(new PlcObjectModel("PlcCuptor", S7.Net.CpuType.S7300, "172.16.4.104", 0, 2));
+            if (IsCreatedPlcByName(numePlc))
+                ListaPlc.Remove(GetPlcByName(numePlc));
         }
 
-        //Functie creare Plc Cuptor GaddaF2
-        public static void CreatePlcGaddaF2()
+        // Functie Conectare Plc dupa nume
+        public static void ConnectPlc(string numePlc)
         {
-            ListaPlc.Add(new PlcObjectModel("PlcGaddaF2", S7.Net.CpuType.S7300, "10.0.0.11", 0, 2));
+            if (IsCreatedPlcByName(numePlc)) GetPlcByName(numePlc).ConnectPlc();
         }
 
-        //Functie creare Plc Cuptor GaddaF4
-        public static void CreatePlcGaddaF4()
+        // Functie Deconectare Plc dupa nume
+        public static void DeConnectPlc(string numePlc)
         {
-            ListaPlc.Add(new PlcObjectModel("PlcGaddaF4", S7.Net.CpuType.S7300, "10.0.0.13", 0, 2));
+            if (IsCreatedPlcByName(numePlc)) GetPlcByName(numePlc).DeconnectPlc();
+        }
+
+        // Functie verificare Conexiune Plc dupa nume
+        public static bool IsConnectedPlc(string numePlc)
+        {
+            if (IsCreatedPlcByName(numePlc)) return GetPlcByName(numePlc).IsConnected;
+            return false;
         }
     }
 }
