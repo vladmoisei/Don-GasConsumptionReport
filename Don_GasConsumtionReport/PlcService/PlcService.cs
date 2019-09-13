@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
 namespace Don_GasConsumtionReport
@@ -8,12 +9,13 @@ namespace Don_GasConsumtionReport
     public static class PlcService
     {
         public static int probaIncrementare;
-        public static List<PlcObjectModel> ListaPlc = null;
+        public static List<PlcObjectModel> ListaPlc = new List<PlcObjectModel>();
 
         // Functie verificare daca exista PLC in lista in functie de nume
         public static bool IsCreatedPlcByName(string numePlc)
         {
             if (ListaPlc.Count > 0)
+            //if (ListaPlc != null)
             {
                 foreach (PlcObjectModel plc in ListaPlc)
                 {
@@ -27,6 +29,7 @@ namespace Don_GasConsumtionReport
         public static bool IsCreatedPlcByIp(string ipPlc)
         {
             if (ListaPlc.Count > 0)
+                //if (ListaPlc != null)
             {
                 foreach (PlcObjectModel plc in ListaPlc)
                 {
@@ -40,6 +43,7 @@ namespace Don_GasConsumtionReport
         public static PlcObjectModel GetPlcByName(string numePlc)
         {
             if (ListaPlc.Count > 0)
+                //if (ListaPlc != null)
             {
                 foreach (PlcObjectModel plc in ListaPlc)
                 {
@@ -53,6 +57,7 @@ namespace Don_GasConsumtionReport
         public static PlcObjectModel GetPlcByIp(string ipPlc)
         {
             if (ListaPlc.Count > 0)
+                //if (ListaPlc != null)
             {
                 foreach (PlcObjectModel plc in ListaPlc)
                 {
@@ -73,28 +78,38 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie stergere Plc dupa nume
-        public static void DeletePlc(string numePlc)
+        public static void DeletePlcByName(string numePlc)
         {
             if (IsCreatedPlcByName(numePlc))
                 ListaPlc.Remove(GetPlcByName(numePlc));
         }
 
         // Functie Conectare Plc dupa nume
-        public static void ConnectPlc(string numePlc)
+        public static void ConnectPlcByName(string numePlc)
         {
             if (IsCreatedPlcByName(numePlc)) GetPlcByName(numePlc).ConnectPlc();
         }
 
         // Functie Deconectare Plc dupa nume
-        public static void DeConnectPlc(string numePlc)
+        public static void DeConnectPlcByName(string numePlc)
         {
             if (IsCreatedPlcByName(numePlc)) GetPlcByName(numePlc).DeconnectPlc();
         }
 
         // Functie verificare Conexiune Plc dupa nume
-        public static bool IsConnectedPlc(string numePlc)
+        public static bool IsConnectedPlcByName(string numePlc)
         {
             if (IsCreatedPlcByName(numePlc)) return GetPlcByName(numePlc).IsConnected;
+            return false;
+        }
+
+        // Functie Verificare Adresa IP
+        public static bool IsAvailableIpAdress(string ip)
+        {
+            Ping ping = new Ping();
+            PingReply reply = ping.Send(ip, 200);
+            if (reply.Status.ToString() == "Success")
+                return true;
             return false;
         }
     }
