@@ -50,6 +50,8 @@
     //// Variabile comenzi Setare lista mail si ora raportare Cuptor    
     // Buton comanda setare
     let btnSetareMailCuptor = document.getElementById("btnSetareMailCuptor");
+    // Buton comanda afisare
+    let btnAfisareMailCuptor = document.getElementById("btnAfisareMailCuptor");
     // TextBox Lista mail
     let textBoxListaMailCuptor = document.getElementById("textBoxListaMailCuptor");
     // TextBox Ora raportare
@@ -71,337 +73,6 @@
     let textIndexGaddaF4Ultim = document.getElementById("textIndexGaddaF4Ultim");
     let textConsumGaddaF4Ultim = document.getElementById("textConsumGaddaF4Ultim");
 
-
-
-
-    // Add a class btnStartBackgroundService.classList.add("btn-danger")
-    // btnStartBackgroundService.classList.toggle("btn-success");
-    // Clase buton start si stop btn-danger btn-success
-    var btnStop = document.getElementById("btnStop");
-    var btnStart = document.getElementById("btnStart");
-
-    // Buton Stop BackgroundService Click event
-    btnStopBackgroundService.addEventListener('click', function () {
-        //alert("s-a apasat buton stop");
-        $.ajax({
-            url: " /Home/StopBackGroundServiceAsync",
-            type: 'GET',
-            success: function (response) {
-                //console.log("S-a realizat Stop Async din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Stop background Service");
-            }
-
-        });
-    });
-    // Buton Start BackgroundService Click event
-    btnStartBackgroundService.addEventListener('click', function () {
-        //alert("s-a apasat buton start");
-        $.ajax({
-            url: " /Home/StartBackGroundServiceAsync",
-            type: 'GET',
-            success: function (response) {
-                //console.log("S-a realizat Start Async din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Start background service Async");
-            }
-        });
-    });
-    // Buton Create Plc Cuptor Click event
-    btnCreatePlcCuptor.addEventListener('click', function () {
-        //alert("s-a apasat buton start");
-        $.ajax({
-            url: " /Home/CreatePlcCuptor",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Create Plc Cuptor din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Create Plc Cuptor");
-            }
-        });
-    });
-    // Buton Delete Plc Cuptor Click event
-    btnDeletePlcCuptor.addEventListener('click', function () {
-        $.ajax({
-            url: " /Home/DeletePlcCuptor",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Delete plc Cuptor din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Delete Plc Cuptor");
-            }
-        });
-    });
-    // Buton Connect Plc Cuptor Click event
-    btnConnectPlcCuptor.addEventListener('click', function () {
-        //alert("s-a apasat buton start");
-        $.ajax({
-            url: " /Home/ConnectPlcCuptor",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Connect Plc Cuptor din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Connect Plc Cuptor");
-            }
-        });
-    });
-    // Buton Deconnect Plc Cuptor Click event
-    btnDeconnectPlcCuptor.addEventListener('click', function () {
-        $.ajax({
-            url: " /Home/DeconnectPlcCuptor",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Deconnect plc Cuptor din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Deconnect Plc Cuptor");
-            }
-        });
-    });
-    // Buton Check Ip Plc Cuptor Click event
-    btnCheckIpPlcCuptor.addEventListener('click', function () {
-        $.ajax({
-            url: " /Home/CheckIpPlcCuptor",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat CheckIP plc Cuptor din buton");
-                //console.log(response);
-                // Verificam daca Plc-ul este conectat
-                if (response) {
-                    // Verificam daca deja butonul indica ca serviciul e pornit
-                    // Daca nu indica, ii adaugam clasa ca sa indice
-                    if (!btnCheckIpPlcCuptor.classList.contains("btn-success")) {
-                        if (btnCheckIpPlcCuptor.classList.contains("btn-info"))
-                            btnCheckIpPlcCuptor.classList.remove("btn-info");
-                        btnCheckIpPlcCuptor.classList.add("btn-success");
-                    }// Verificam daca butonul stop indica ca este oprit
-                    // Daca este il facem sa nu mai indice
-                    if (btnCheckIpPlcCuptor.classList.contains("btn-danger"))
-                        btnCheckIpPlcCuptor.classList.remove("btn-danger");
-                } else {
-                    if (btnCheckIpPlcCuptor.classList.contains("btn-success"))
-                        btnCheckIpPlcCuptor.classList.remove("btn-succes");
-                    if (btnCheckIpPlcCuptor.classList.contains("btn-info"))
-                        btnCheckIpPlcCuptor.classList.remove("btn-info");
-                    if (!btnCheckIpPlcCuptor.classList.contains("btn-danger"))
-                        btnCheckIpPlcCuptor.classList.add("btn-danger");
-                }
-            },
-            error: function (response) {
-                console.log("Nu a mers btn CheckIP Plc Cuptor");
-            }
-        });
-    });
-
-    // Event Listeners butoane GaddaF2
-    // Buton Create Plc GaddaF2 Click event
-    btnCreatePlcGaddaF2.addEventListener('click', function () {
-        //alert("s-a apasat buton start");
-        $.ajax({
-            url: " /Home/CreatePlcGaddaF2",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Create Plc GaddaF2 din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Create Plc GaddaF2");
-            }
-        });
-    });
-    // Buton Delete Plc GaddaF2 Click event
-    btnDeletePlcGaddaF2.addEventListener('click', function () {
-        $.ajax({
-            url: " /Home/DeletePlcGaddaF2",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Delete plc GaddaF2 din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Delete Plc GaddaF2");
-            }
-        });
-    });
-
-    // Buton Connect Plc GaddaF2 Click event
-    btnConnectPlcGaddaF2.addEventListener('click', function () {
-        //alert("s-a apasat buton start");
-        $.ajax({
-            url: " /Home/ConnectPlcGaddaF2",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Connect Plc GaddaF2 din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Connect Plc GaddaF2");
-            }
-        });
-    });
-    // Buton Deconnect Plc GaddaF2 Click event
-    btnDeconnectPlcGaddaF2.addEventListener('click', function () {
-        $.ajax({
-            url: " /Home/DeconnectPlcGaddaF2",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Deconnect plc GaddaF2 din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Deconnect Plc GaddaF2");
-            }
-        });
-    });
-    // Buton Check Ip Plc GaddaF2 Click event
-    btnCheckIpPlcGaddaF2.addEventListener('click', function () {
-        $.ajax({
-            url: " /Home/CheckIpPlcGaddaF2",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat CheckIP plc GaddaF2 din buton");
-                //console.log(response);
-                // Verificam daca Plc-ul este conectat
-                if (response) {
-                    // Verificam daca deja butonul indica ca serviciul e pornit
-                    // Daca nu indica, ii adaugam clasa ca sa indice
-                    if (!btnCheckIpPlcGaddaF2.classList.contains("btn-success")) {
-                        if (btnCheckIpPlcGaddaF2.classList.contains("btn-info"))
-                            btnCheckIpPlcGaddaF2.classList.remove("btn-info");
-                        btnCheckIpPlcGaddaF2.classList.add("btn-success");
-                    }// Verificam daca butonul stop indica ca este oprit
-                    // Daca este il facem sa nu mai indice
-                    if (btnCheckIpPlcGaddaF2.classList.contains("btn-danger"))
-                        btnCheckIpPlcGaddaF2.classList.remove("btn-danger");
-                } else {
-                    if (btnCheckIpPlcGaddaF2.classList.contains("btn-success"))
-                        btnCheckIpPlcGaddaF2.classList.remove("btn-succes");
-                    if (btnCheckIpPlcGaddaF2.classList.contains("btn-info"))
-                        btnCheckIpPlcGaddaF2.classList.remove("btn-info");
-                    if (!btnCheckIpPlcGaddaF2.classList.contains("btn-danger"))
-                        btnCheckIpPlcGaddaF2.classList.add("btn-danger");
-                }
-            },
-            error: function (response) {
-                console.log("Nu a mers btn CheckIP Plc GaddaF2");
-            }
-        });
-    });
-
-    // Event Listeners butoane GaddaF4
-    // Buton Create Plc GaddaF4 Click event
-    btnCreatePlcGaddaF4.addEventListener('click', function () {
-        //alert("s-a apasat buton start");
-        $.ajax({
-            url: " /Home/CreatePlcGaddaF4",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Create Plc GaddaF4 din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Create Plc GaddaF4");
-            }
-        });
-    });
-    // Buton Delete Plc GaddaF4 Click event
-    btnDeletePlcGaddaF4.addEventListener('click', function () {
-        $.ajax({
-            url: " /Home/DeletePlcGaddaF4",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Delete plc GaddaF4 din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Delete Plc GaddaF4");
-            }
-        });
-    });
-
-    // Buton Connect Plc GaddaF4 Click event
-    btnConnectPlcGaddaF4.addEventListener('click', function () {
-        //alert("s-a apasat buton start");
-        $.ajax({
-            url: " /Home/ConnectPlcGaddaF4",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Connect Plc GaddaF4 din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Connect Plc GaddaF4");
-            }
-        });
-    });
-    // Buton Deconnect Plc GaddaF4 Click event
-    btnDeconnectPlcGaddaF4.addEventListener('click', function () {
-        $.ajax({
-            url: " /Home/DeconnectPlcGaddaF4",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat Deconnect plc GaddaF4 din buton");
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Deconnect Plc GaddaF4");
-            }
-        });
-    });
-    // Buton Check Ip Plc GaddaF2 Click event
-    btnCheckIpPlcGaddaF4.addEventListener('click', function () {
-        $.ajax({
-            url: " /Home/CheckIpPlcGaddaF4",
-            type: 'GET',
-            success: function (response) {
-                console.log("S-a realizat CheckIP plc GaddaF4 din buton");
-                //console.log(response);
-                // Verificam daca Plc-ul este conectat
-                if (response) {
-                    // Verificam daca deja butonul indica ca serviciul e pornit
-                    // Daca nu indica, ii adaugam clasa ca sa indice
-                    if (!btnCheckIpPlcGaddaF4.classList.contains("btn-success")) {
-                        if (btnCheckIpPlcGaddaF4.classList.contains("btn-info"))
-                            btnCheckIpPlcGaddaF4.classList.remove("btn-info");
-                        btnCheckIpPlcGaddaF4.classList.add("btn-success");
-                    }// Verificam daca butonul stop indica ca este oprit
-                    // Daca este il facem sa nu mai indice
-                    if (btnCheckIpPlcGaddaF4.classList.contains("btn-danger"))
-                        btnCheckIpPlcGaddaF4.classList.remove("btn-danger");
-                } else {
-                    if (btnCheckIpPlcGaddaF4.classList.contains("btn-success"))
-                        btnCheckIpPlcGaddaF4.classList.remove("btn-succes");
-                    if (btnCheckIpPlcGaddaF4.classList.contains("btn-info"))
-                        btnCheckIpPlcGaddaF4.classList.remove("btn-info");
-                    if (!btnCheckIpPlcGaddaF4.classList.contains("btn-danger"))
-                        btnCheckIpPlcGaddaF4.classList.add("btn-danger");
-                }
-            },
-            error: function (response) {
-                console.log("Nu a mers btn CheckIP Plc GaddaF4");
-            }
-        });
-    });
-
-    // Setare ListaMail OraRaport Plc Cuptro
-    // Buton Set ListaMail si OraRaport Plc Cuptor Click event
-    btnSetareMailCuptor.addEventListener('click', function () {
-        //let myTransferData = "listaMail=" + textBoxListaMailCuptor.innerHTML + "&oraRaport=" +
-        //    textBoxOraRaportCuptor.innerHTML;
-        let myTransferData = {
-            listaMail: textBoxListaMailCuptor.innerHTML,
-            oraRAport: textBoxOraRaportCuptor.innerHTML
-        };
-        $.ajax({
-            url: " /Home/SetListaMailOraRaportPlcCuptor",
-            type: 'POST',
-            data: myTransferData,
-            success: function (response) {
-                console.log("S-a realizat setare mail plc Cuptor din buton");
-                console.log(response.lista.toString() + response.ora.toString());
-            },
-            error: function (response) {
-                console.log("Nu a mers btn Deconnect Plc GaddaF4");
-            }
-        });
-    });
 
     // Refresh parameters
     setInterval(function () {
@@ -428,7 +99,7 @@
                 // Functie Actualizare Culoare butoane Creare/ Stergere Plc GaddaF4
                 BtnsPlcCreationStatusGaddaF4(response.isCreatedPlcGaddaF4);
                 // Functie Actualizare Culoare butoane Connect/ Deconnect Plc GaddaF4
-                BtnsPlcConnectionStatusGaddaF4(response.isConnectedPlcGaddaF4);
+                BtnsPlcConnectionStatusGaddaF4(response.isConnectedPlcGaddaF4);                
             },
             error: function (response) {
                 console.log("Nu a mers call functie UpdateParameters");
@@ -441,6 +112,413 @@
     }, 1000);
 
 
+});
+
+// Add a class btnStartBackgroundService.classList.add("btn-danger")
+// btnStartBackgroundService.classList.toggle("btn-success");
+// Clase buton start si stop btn-danger btn-success
+var btnStop = document.getElementById("btnStop");
+var btnStart = document.getElementById("btnStart");
+
+
+
+
+// Buton Stop BackgroundService Click event
+btnStopBackgroundService.addEventListener('click', function () {
+    //alert("s-a apasat buton stop");
+    $.ajax({
+        url: " /Home/StopBackGroundServiceAsync",
+        type: 'GET',
+        success: function (response) {
+            //console.log("S-a realizat Stop Async din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Stop background Service");
+        }
+
+    });
+});
+// Buton Start BackgroundService Click event
+btnStartBackgroundService.addEventListener('click', function () {
+    //alert("s-a apasat buton start");
+    $.ajax({
+        url: " /Home/StartBackGroundServiceAsync",
+        type: 'GET',
+        success: function (response) {
+            //console.log("S-a realizat Start Async din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Start background service Async");
+        }
+    });
+});
+// Buton Create Plc Cuptor Click event
+btnCreatePlcCuptor.addEventListener('click', function () {
+    //alert("s-a apasat buton start");
+    $.ajax({
+        url: " /Home/CreatePlcCuptor",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Create Plc Cuptor din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Create Plc Cuptor");
+        }
+    });
+});
+// Buton Delete Plc Cuptor Click event
+btnDeletePlcCuptor.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/DeletePlcCuptor",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Delete plc Cuptor din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Delete Plc Cuptor");
+        }
+    });
+});
+// Buton Connect Plc Cuptor Click event
+btnConnectPlcCuptor.addEventListener('click', function () {
+    //alert("s-a apasat buton start");
+    $.ajax({
+        url: " /Home/ConnectPlcCuptor",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Connect Plc Cuptor din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Connect Plc Cuptor");
+        }
+    });
+});
+// Buton Deconnect Plc Cuptor Click event
+btnDeconnectPlcCuptor.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/DeconnectPlcCuptor",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Deconnect plc Cuptor din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Deconnect Plc Cuptor");
+        }
+    });
+});
+// Buton Check Ip Plc Cuptor Click event
+btnCheckIpPlcCuptor.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/CheckIpPlcCuptor",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat CheckIP plc Cuptor din buton");
+            //console.log(response);
+            // Verificam daca Plc-ul este conectat
+            if (response) {
+                // Verificam daca deja butonul indica ca serviciul e pornit
+                // Daca nu indica, ii adaugam clasa ca sa indice
+                if (!btnCheckIpPlcCuptor.classList.contains("btn-success")) {
+                    if (btnCheckIpPlcCuptor.classList.contains("btn-info"))
+                        btnCheckIpPlcCuptor.classList.remove("btn-info");
+                    btnCheckIpPlcCuptor.classList.add("btn-success");
+                }// Verificam daca butonul stop indica ca este oprit
+                // Daca este il facem sa nu mai indice
+                if (btnCheckIpPlcCuptor.classList.contains("btn-danger"))
+                    btnCheckIpPlcCuptor.classList.remove("btn-danger");
+            } else {
+                if (btnCheckIpPlcCuptor.classList.contains("btn-success"))
+                    btnCheckIpPlcCuptor.classList.remove("btn-succes");
+                if (btnCheckIpPlcCuptor.classList.contains("btn-info"))
+                    btnCheckIpPlcCuptor.classList.remove("btn-info");
+                if (!btnCheckIpPlcCuptor.classList.contains("btn-danger"))
+                    btnCheckIpPlcCuptor.classList.add("btn-danger");
+            }
+        },
+        error: function (response) {
+            console.log("Nu a mers btn CheckIP Plc Cuptor");
+        }
+    });
+});
+
+// Event Listeners butoane GaddaF2
+// Buton Create Plc GaddaF2 Click event
+btnCreatePlcGaddaF2.addEventListener('click', function () {
+    //alert("s-a apasat buton start");
+    $.ajax({
+        url: " /Home/CreatePlcGaddaF2",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Create Plc GaddaF2 din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Create Plc GaddaF2");
+        }
+    });
+});
+// Buton Delete Plc GaddaF2 Click event
+btnDeletePlcGaddaF2.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/DeletePlcGaddaF2",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Delete plc GaddaF2 din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Delete Plc GaddaF2");
+        }
+    });
+});
+
+// Buton Connect Plc GaddaF2 Click event
+btnConnectPlcGaddaF2.addEventListener('click', function () {
+    //alert("s-a apasat buton start");
+    $.ajax({
+        url: " /Home/ConnectPlcGaddaF2",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Connect Plc GaddaF2 din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Connect Plc GaddaF2");
+        }
+    });
+});
+// Buton Deconnect Plc GaddaF2 Click event
+btnDeconnectPlcGaddaF2.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/DeconnectPlcGaddaF2",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Deconnect plc GaddaF2 din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Deconnect Plc GaddaF2");
+        }
+    });
+});
+// Buton Check Ip Plc GaddaF2 Click event
+btnCheckIpPlcGaddaF2.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/CheckIpPlcGaddaF2",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat CheckIP plc GaddaF2 din buton");
+            //console.log(response);
+            // Verificam daca Plc-ul este conectat
+            if (response) {
+                // Verificam daca deja butonul indica ca serviciul e pornit
+                // Daca nu indica, ii adaugam clasa ca sa indice
+                if (!btnCheckIpPlcGaddaF2.classList.contains("btn-success")) {
+                    if (btnCheckIpPlcGaddaF2.classList.contains("btn-info"))
+                        btnCheckIpPlcGaddaF2.classList.remove("btn-info");
+                    btnCheckIpPlcGaddaF2.classList.add("btn-success");
+                }// Verificam daca butonul stop indica ca este oprit
+                // Daca este il facem sa nu mai indice
+                if (btnCheckIpPlcGaddaF2.classList.contains("btn-danger"))
+                    btnCheckIpPlcGaddaF2.classList.remove("btn-danger");
+            } else {
+                if (btnCheckIpPlcGaddaF2.classList.contains("btn-success"))
+                    btnCheckIpPlcGaddaF2.classList.remove("btn-succes");
+                if (btnCheckIpPlcGaddaF2.classList.contains("btn-info"))
+                    btnCheckIpPlcGaddaF2.classList.remove("btn-info");
+                if (!btnCheckIpPlcGaddaF2.classList.contains("btn-danger"))
+                    btnCheckIpPlcGaddaF2.classList.add("btn-danger");
+            }
+        },
+        error: function (response) {
+            console.log("Nu a mers btn CheckIP Plc GaddaF2");
+        }
+    });
+});
+
+// Event Listeners butoane GaddaF4
+// Buton Create Plc GaddaF4 Click event
+btnCreatePlcGaddaF4.addEventListener('click', function () {
+    //alert("s-a apasat buton start");
+    $.ajax({
+        url: " /Home/CreatePlcGaddaF4",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Create Plc GaddaF4 din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Create Plc GaddaF4");
+        }
+    });
+});
+// Buton Delete Plc GaddaF4 Click event
+btnDeletePlcGaddaF4.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/DeletePlcGaddaF4",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Delete plc GaddaF4 din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Delete Plc GaddaF4");
+        }
+    });
+});
+
+// Buton Connect Plc GaddaF4 Click event
+btnConnectPlcGaddaF4.addEventListener('click', function () {
+    //alert("s-a apasat buton start");
+    $.ajax({
+        url: " /Home/ConnectPlcGaddaF4",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Connect Plc GaddaF4 din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Connect Plc GaddaF4");
+        }
+    });
+});
+// Buton Deconnect Plc GaddaF4 Click event
+btnDeconnectPlcGaddaF4.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/DeconnectPlcGaddaF4",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Deconnect plc GaddaF4 din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Deconnect Plc GaddaF4");
+        }
+    });
+});
+// Buton Check Ip Plc GaddaF2 Click event
+btnCheckIpPlcGaddaF4.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/CheckIpPlcGaddaF4",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat CheckIP plc GaddaF4 din buton");
+            //console.log(response);
+            // Verificam daca Plc-ul este conectat
+            if (response) {
+                // Verificam daca deja butonul indica ca serviciul e pornit
+                // Daca nu indica, ii adaugam clasa ca sa indice
+                if (!btnCheckIpPlcGaddaF4.classList.contains("btn-success")) {
+                    if (btnCheckIpPlcGaddaF4.classList.contains("btn-info"))
+                        btnCheckIpPlcGaddaF4.classList.remove("btn-info");
+                    btnCheckIpPlcGaddaF4.classList.add("btn-success");
+                }// Verificam daca butonul stop indica ca este oprit
+                // Daca este il facem sa nu mai indice
+                if (btnCheckIpPlcGaddaF4.classList.contains("btn-danger"))
+                    btnCheckIpPlcGaddaF4.classList.remove("btn-danger");
+            } else {
+                if (btnCheckIpPlcGaddaF4.classList.contains("btn-success"))
+                    btnCheckIpPlcGaddaF4.classList.remove("btn-succes");
+                if (btnCheckIpPlcGaddaF4.classList.contains("btn-info"))
+                    btnCheckIpPlcGaddaF4.classList.remove("btn-info");
+                if (!btnCheckIpPlcGaddaF4.classList.contains("btn-danger"))
+                    btnCheckIpPlcGaddaF4.classList.add("btn-danger");
+            }
+        },
+        error: function (response) {
+            console.log("Nu a mers btn CheckIP Plc GaddaF4");
+        }
+    });
+});
+
+// Setare si afisare ListaMail OraRaport Plc Cuptor
+// Buton Set ListaMail si OraRaport Plc Cuptor Click event
+btnSetareMailCuptor.addEventListener('click', function () {
+    //let myTransferData = "listaMail=" + textBoxListaMailCuptor.innerHTML + "&oraRaport=" +
+    //    textBoxOraRaportCuptor.innerHTML;
+    let myTransferData = {
+        listaMail: textBoxListaMailCuptor.value,
+        oraRAport: textBoxOraRaportCuptor.value
+    };
+    console.log(myTransferData);
+    $.ajax({
+        url: " /Home/SetListaMailOraRaportPlcCuptor",
+        type: 'POST',
+        data: myTransferData,
+        success: function (response) {
+            console.log("S-a realizat setare mail plc Cuptor din buton");
+            // Setare Text box mail and ora raport cutpr and gadda
+            textBoxListaMailCuptor.value = response.lista;
+            textBoxOraRaportCuptor.value = response.ora;
+            //console.log(response.lista.toString()) + "    " + response.ora.toString();
+        },
+        error: function (response) {
+            console.log("Nu a mers btn setare mail Plc Cuptor");
+        }
+    });
+});
+
+// Buton Afisare ListaMail si OraRaport Plc Cuptor Click event
+btnAfisareMailCuptor.addEventListener('click', function () {
+    //let myTransferData = "listaMail=" + textBoxListaMailCuptor.innerHTML + "&oraRaport=" +
+    //    textBoxOraRaportCuptor.innerHTML;    
+    //console.log(myTransferData);
+    $.ajax({
+        url: " /Home/ShowListaMailOraRaportPlcCuptor",
+        type: 'GET',
+        //data: myTransferData,
+        success: function (response) {
+            console.log("S-a realizat afisare mail plc Cuptor din buton");
+            // Setare Text box mail and ora raport cutpr and gadda
+            textBoxListaMailCuptor.value = response.lista;
+            textBoxOraRaportCuptor.value = response.ora;
+            //console.log(response.lista.toString()) + "    " + response.ora.toString();
+        },
+        error: function (response) {
+            console.log("Nu a mers btn afisare mail Plc Cuptor");
+        }
+    });
+});
+
+// Setare si afisare ListaMail OraRaport Plc Gadda
+// Buton Set ListaMail si OraRaport Plc Gadda Click event
+btnSetareMailGadda.addEventListener('click', function () {
+    //let myTransferData = "listaMail=" + textBoxListaMailCuptor.innerHTML + "&oraRaport=" +
+    //    textBoxOraRaportCuptor.innerHTML;
+    let myTransferData = {
+        listaMail: textBoxListaMailGadda.value,
+        oraRAport: textBoxOraRaportGadda.value
+    };
+    console.log(myTransferData);
+    $.ajax({
+        url: " /Home/SetListaMailOraRaportPlcGadda",
+        type: 'POST',
+        data: myTransferData,
+        success: function (response) {
+            console.log("S-a realizat setare mail plc Gadda din buton");
+            // Setare Text box mail and ora raport cutpr and gadda
+            textBoxListaMailGadda.value = response.lista;
+            textBoxOraRaportGadda.value = response.ora;
+            //console.log(response.lista.toString()) + "    " + response.ora.toString();
+        },
+        error: function (response) {
+            console.log("Nu a mers btn setare mail Plc Gadda");
+        }
+    });
+});
+
+// Buton Afisare ListaMail si OraRaport Plc Gadda Click event
+btnAfisareMailGadda.addEventListener('click', function () {
+    //let myTransferData = "listaMail=" + textBoxListaMailCuptor.innerHTML + "&oraRaport=" +
+    //    textBoxOraRaportCuptor.innerHTML;    
+    //console.log(myTransferData);
+    $.ajax({
+        url: " /Home/ShowListaMailOraRaportPlcGadda",
+        type: 'GET',
+        //data: myTransferData,
+        success: function (response) {
+            console.log("S-a realizat afisare mail plc Gadda din buton");
+            // Setare Text box mail and ora raport cutpr and gadda
+            textBoxListaMailGadda.value = response.lista;
+            textBoxOraRaportGadda.value = response.ora;
+            //console.log(response.lista.toString()) + "    " + response.ora.toString();
+        },
+        error: function (response) {
+            console.log("Nu a mers btn afisare mail Plc Gadda");
+        }
+    });
 });
 
 // BACKGROUNDSERVICE

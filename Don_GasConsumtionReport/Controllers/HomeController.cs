@@ -45,6 +45,7 @@ using (JsonWriter writer = new JsonTextWriter(sw))
             return View();
         }
 
+        #region View Index UpdateParameters - refresh automatically
         // Actiune returnare parametri in Index View pentru actualizare 
         public IActionResult UpdateParameters()
         {
@@ -57,7 +58,12 @@ using (JsonWriter writer = new JsonTextWriter(sw))
                 IsCreatedPlcGaddaF2 = PlcService.IsCreatedPlcByName("PlcGaddaF2"),
                 IsConnectedPlcGaddaF2= PlcService.IsConnectedPlcByName("PlcGaddaF2"),
                 IsCreatedPlcGaddaF4 = PlcService.IsCreatedPlcByName("PlcGaddaF4"),
-                IsConnectedPlcGaddaF4 = PlcService.IsConnectedPlcByName("PlcGaddaF4")
+                IsConnectedPlcGaddaF4 = PlcService.IsConnectedPlcByName("PlcGaddaF4"),
+                TextBoxListaMailCuptor = Raport.ListaMailCuptor,
+                TextBoxOraRaportCuptor = Raport.OraRaportCuptor,
+                TextBoxListaMailGadda = Raport.ListaMailGadda,
+                TextBoxOraRaportGadda = Raport.OraRaportGadda
+               
             };
 
             return new JsonResult(dataToPass);
@@ -66,6 +72,7 @@ using (JsonWriter writer = new JsonTextWriter(sw))
             //string proba = JsonConvert.SerializeObject(Auxiliar.GetClock(), _backGroundService.IsStartedService.ToString());
             //return new JsonResult(Auxiliar.GetClock());
         }
+        #endregion
 
         public IActionResult CuptorPropulsie()
         {
@@ -245,20 +252,35 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         }
         #endregion
 
-        #region View Index: Setare ListaMail si oraRaport; index si consum Cuptor
+        #region View Index: Setare ListaMail si oraRaport; index si consum Cuptor & Gadda
         // Set Lista mail si ora raport Plc Cuptor
         public IActionResult SetListaMailOraRaportPlcCuptor(string listaMail,string oraRaport)
         {
             Raport.ListaMailCuptor = listaMail;
             Raport.OraRaportCuptor = oraRaport;
             //return RedirectToAction(nameof(Index));
-            return new JsonResult(new {Lista = listaMail, Ora = oraRaport });
+            return new JsonResult(new { Lista = Raport.ListaMailCuptor, Ora = Raport.OraRaportCuptor });
+        }
+        // Show Lista mail si ora raport Plc Cuptor
+        public IActionResult ShowListaMailOraRaportPlcCuptor()
+        {
+            return new JsonResult(new { Lista = Raport.ListaMailCuptor, Ora = Raport.OraRaportCuptor });
+        }
+        // Set Lista mail si ora raport Plc Gadda
+        public IActionResult SetListaMailOraRaportPlcGadda(string listaMail, string oraRaport)
+        {
+            Raport.ListaMailGadda = listaMail;
+            Raport.OraRaportGadda = oraRaport;
+            //return RedirectToAction(nameof(Index));
+            return new JsonResult(new { Lista = Raport.ListaMailGadda, Ora = Raport.OraRaportGadda });
+        }
+        // Show Lista mail si ora raport Plc Gadda
+        public IActionResult ShowListaMailOraRaportPlcGadda()
+        {
+            return new JsonResult(new { Lista = Raport.ListaMailGadda, Ora = Raport.OraRaportGadda });
         }
         #endregion
-        #region View Index: Setare ListaMail si oraRaport; index si consum GaddaF2
-        #endregion
-        #region View Index: Setare ListaMail si oraRaport; index si consum GaddaF4
-        #endregion
+
         // Din Template
         public IActionResult About()
         {

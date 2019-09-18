@@ -16,6 +16,9 @@ namespace Don_GasConsumtionReport
         public bool IsConnectedPlcGaddaF2 { get; set; }
         public bool IsCreatedPlcGaddaF4 { get; set; }
         public bool IsConnectedPlcGaddaF4 { get; set; }
-
+        public string TextBoxListaMailCuptor { get; set; }
+        public string TextBoxOraRaportCuptor { get; set; }
+        public string TextBoxListaMailGadda { get; set; }
+        public string TextBoxOraRaportGadda { get; set; }
     }
 }
