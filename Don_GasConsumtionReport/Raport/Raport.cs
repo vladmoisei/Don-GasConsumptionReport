@@ -8,11 +8,11 @@ namespace Don_GasConsumtionReport
 {
     public static class Raport
     {
-        public static string textBoxListaMailCuptor = "";
-        public static string textBoxListaMailGadda = "";
+        public static string ListaMailCuptor = "";
+        public static string ListaMailGadda = "";
 
-        public static string textBoxOraRaportCuptor = "";
-        public static string textBoxOraRaportGadda = "";
+        public static string OraRaportCuptor = "";
+        public static string OraRaportGadda = "";
 
         
 

@@ -12,6 +12,10 @@ namespace Don_GasConsumtionReport
         public bool IsStartedBackgroundService { get; set; }
         public bool IsCreatedPlcCuptor { get; set; }
         public bool IsConnectedPlcCuptor { get; set; }
+        public bool IsCreatedPlcGaddaF2{ get; set; }
+        public bool IsConnectedPlcGaddaF2 { get; set; }
+        public bool IsCreatedPlcGaddaF4 { get; set; }
+        public bool IsConnectedPlcGaddaF4 { get; set; }
 
     }
 }

@@ -53,7 +53,11 @@ using (JsonWriter writer = new JsonTextWriter(sw))
                 Clock = Auxiliar.GetClock(),
                 IsStartedBackgroundService = _backGroundService.IsStartedService,
                 IsCreatedPlcCuptor = PlcService.IsCreatedPlcByName("PlcCuptor"),
-                IsConnectedPlcCuptor = PlcService.IsConnectedPlcByName("PlcCuptor")
+                IsConnectedPlcCuptor = PlcService.IsConnectedPlcByName("PlcCuptor"),
+                IsCreatedPlcGaddaF2 = PlcService.IsCreatedPlcByName("PlcGaddaF2"),
+                IsConnectedPlcGaddaF2= PlcService.IsConnectedPlcByName("PlcGaddaF2"),
+                IsCreatedPlcGaddaF4 = PlcService.IsCreatedPlcByName("PlcGaddaF4"),
+                IsConnectedPlcGaddaF4 = PlcService.IsConnectedPlcByName("PlcGaddaF4")
             };
 
             return new JsonResult(dataToPass);
@@ -73,7 +77,7 @@ using (JsonWriter writer = new JsonTextWriter(sw))
             return View();
         }
 
-
+        #region View Index: Comenzi butoane BackgroundService
         // COMENZI BUTOANE INDEX
         //  Stop BackgroundService      
         public async Task<IActionResult> StopBackGroundServiceAsync()
@@ -92,6 +96,10 @@ using (JsonWriter writer = new JsonTextWriter(sw))
             return RedirectToAction(nameof(Index));
         }
 
+        #endregion
+
+        #region View Index: Comenzi butoane Plc Cuptor
+        // COMENZI PLC CUPTOR
         // Create Plc Cuptor
         public IActionResult CreatePlcCuptor()
         {
@@ -137,7 +145,120 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         {
             return new JsonResult(PlcService.IsAvailableIpAdress("172.16.4.104"));
         }
+        #endregion
 
+        #region View Index: Comenzi butoane Plc GaddaF2
+        // COMENZI PLC GaddaF2
+        // Create Plc GaddaF2
+        public IActionResult CreatePlcGaddaF2()
+        {
+            if (!PlcService.IsCreatedPlcByIp("10.0.0.11"))
+            {
+                PlcService.CreatePlc("PlcGaddaF2", S7.Net.CpuType.S7300, "10.0.0.11", 0, 2);
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Stergere Plc GaddaF2
+        public IActionResult DeletePlcGaddaF2()
+        {
+            if (PlcService.IsCreatedPlcByIp("10.0.0.11"))
+            {
+                PlcService.DeletePlcByName("PlcGaddaF2");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Connect Plc GaddaF2
+        public IActionResult ConnectPlcGaddaF2()
+        {
+            if (!PlcService.IsConnectedPlcByName("PlcGaddaF2"))
+            {
+                PlcService.ConnectPlcByName("PlcGaddaF2");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Deconnect Plc GaddaF2
+        public IActionResult DeconnectPlcGaddaF2()
+        {
+            if (PlcService.IsConnectedPlcByName("PlcGaddaF2"))
+            {
+                PlcService.DeConnectPlcByName("PlcGaddaF2");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Check Ip Manual Plc GaddaF2
+        public IActionResult CheckIpPlcGaddaF2()
+        {
+            return new JsonResult(PlcService.IsAvailableIpAdress("10.0.0.11"));
+        }
+        #endregion
+
+        #region View Index: Comenzi butoane Plc GaddaF4
+        // COMENZI PLC GaddaF4
+        // Create Plc GaddaF4
+        public IActionResult CreatePlcGaddaF4()
+        {
+            if (!PlcService.IsCreatedPlcByIp("10.0.0.13"))
+            {
+                PlcService.CreatePlc("PlcGaddaF4", S7.Net.CpuType.S7300, "10.0.0.13", 0, 2);
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Stergere Plc GaddaF4
+        public IActionResult DeletePlcGaddaF4()
+        {
+            if (PlcService.IsCreatedPlcByIp("10.0.0.13"))
+            {
+                PlcService.DeletePlcByName("PlcGaddaF4");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Connect Plc GaddaF4
+        public IActionResult ConnectPlcGaddaF4()
+        {
+            if (!PlcService.IsConnectedPlcByName("PlcGaddaF4"))
+            {
+                PlcService.ConnectPlcByName("PlcGaddaF4");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Deconnect Plc GaddaF4
+        public IActionResult DeconnectPlcGaddaF4()
+        {
+            if (PlcService.IsConnectedPlcByName("PlcGaddaF4"))
+            {
+                PlcService.DeConnectPlcByName("PlcGaddaF4");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Check Ip Manual Plc GaddaF4
+        public IActionResult CheckIpPlcGaddaF4()
+        {
+            return new JsonResult(PlcService.IsAvailableIpAdress("10.0.0.13"));
+        }
+        #endregion
+
+        #region View Index: Setare ListaMail si oraRaport; index si consum Cuptor
+        // Set Lista mail si ora raport Plc Cuptor
+        public IActionResult SetListaMailOraRaportPlcCuptor(string listaMail,string oraRaport)
+        {
+            Raport.ListaMailCuptor = listaMail;
+            Raport.OraRaportCuptor = oraRaport;
+            //return RedirectToAction(nameof(Index));
+            return new JsonResult(new {Lista = listaMail, Ora = oraRaport });
+        }
+        #endregion
+        #region View Index: Setare ListaMail si oraRaport; index si consum GaddaF2
+        #endregion
+        #region View Index: Setare ListaMail si oraRaport; index si consum GaddaF4
+        #endregion
         // Din Template
         public IActionResult About()
         {
