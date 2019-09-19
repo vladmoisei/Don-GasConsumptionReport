@@ -99,7 +99,14 @@
                 // Functie Actualizare Culoare butoane Creare/ Stergere Plc GaddaF4
                 BtnsPlcCreationStatusGaddaF4(response.isCreatedPlcGaddaF4);
                 // Functie Actualizare Culoare butoane Connect/ Deconnect Plc GaddaF4
-                BtnsPlcConnectionStatusGaddaF4(response.isConnectedPlcGaddaF4);                
+                BtnsPlcConnectionStatusGaddaF4(response.isConnectedPlcGaddaF4);
+                // Actualizare ultimele valori Index citite
+                console.log("Index cuptor: " + response.textBlockIndexCuptor.toString());
+                console.log("Raspuns: " +response);
+                textIndexCuptorUltim.innerHTML = response.textBlockIndexCuptor.toString();
+                textIndexGaddaF2Ultim.innerHTML = response.textBlockIndexGaddaF2.toString();
+                textIndexGaddaF4Ultim.innerHTML = response.textBlockIndexGaddaF4.toString(); 
+
             },
             error: function (response) {
                 console.log("Nu a mers call functie UpdateParameters");

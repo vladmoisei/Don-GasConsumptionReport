@@ -73,8 +73,24 @@ namespace Don_GasConsumtionReport
         {
             // Verificare daca daca exista plc Creat in lista
             if (IsCreatedPlcByIp(ip) || IsCreatedPlcByName(plcName)) return;
+            PlcObjectModel plc = new PlcObjectModel(plcName, cpuType, ip, rack, slot);
             // Creaza plc nou in lista
-            ListaPlc.Add(new PlcObjectModel(plcName, cpuType, ip, rack, slot));
+            ListaPlc.Add(plc);
+            // Set Adresa variabila citire index in functie de nume
+            switch (plc.PlcName)
+            {
+                case "PlcCuptor":
+                    plc.AdresaIndexGaz = "MD130";
+                    break;
+                case "PlcGaddaF2":
+                    plc.AdresaIndexGaz = "DB10.DBD46"; //Dint
+                    break;
+                case "PlcGaddaF4":
+                    plc.AdresaIndexGaz = "DB10.DBD46"; //Dint
+                    break;
+                default:
+                    break;
+            }
         }
 
         // Functie stergere Plc dupa nume
@@ -111,6 +127,15 @@ namespace Don_GasConsumtionReport
             if (reply.Status.ToString() == "Success")
                 return true;
             return false;
+        }
+
+        // Functie refresh values of plc in list
+        public static void RefreshValuesListaPlc()
+        {
+            foreach (PlcObjectModel plc in ListaPlc)
+            {
+                if (plc.IsConnected) plc.RefreshValues();
+            }
         }
     }
 }

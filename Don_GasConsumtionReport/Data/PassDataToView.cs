@@ -20,5 +20,8 @@ namespace Don_GasConsumtionReport
         public string TextBoxOraRaportCuptor { get; set; }
         public string TextBoxListaMailGadda { get; set; }
         public string TextBoxOraRaportGadda { get; set; }
+        public uint TextBlockIndexCuptor { get; set; }
+        public uint TextBlockIndexGaddaF2 { get; set; }
+        public uint TextBlockIndexGaddaF4 { get; set; }
     }
 }

@@ -13,6 +13,6 @@ namespace Don_GasConsumtionReport
         { }
 
         public DbSet<IndexModel> IndexModels { get; set; }
-        public DbSet<ConsumGazModel> ConsumGazModels{ get; set; }
+        //public DbSet<ConsumGazModel> ConsumGazModels{ get; set; }
     }
 }

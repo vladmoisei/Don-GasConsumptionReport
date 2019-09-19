@@ -62,8 +62,11 @@ using (JsonWriter writer = new JsonTextWriter(sw))
                 TextBoxListaMailCuptor = Raport.ListaMailCuptor,
                 TextBoxOraRaportCuptor = Raport.OraRaportCuptor,
                 TextBoxListaMailGadda = Raport.ListaMailGadda,
-                TextBoxOraRaportGadda = Raport.OraRaportGadda
-               
+                TextBoxOraRaportGadda = Raport.OraRaportGadda,
+                TextBlockIndexCuptor = Raport.IndexCuptor,
+                TextBlockIndexGaddaF2 = Raport.IndexGaddaF2,
+                TextBlockIndexGaddaF4 = Raport.IndexGaddaF4
+              
             };
 
             return new JsonResult(dataToPass);

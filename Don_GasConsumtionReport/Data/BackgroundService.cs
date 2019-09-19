@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,13 @@ namespace Don_GasConsumtionReport
 {
     public class BackgroundService : IHostedService, IDisposable
     {
+        private readonly IServiceScopeFactory _scopeFactory;
+
+        public BackgroundService(IServiceScopeFactory scopeFactory)
+        {
+            _scopeFactory = scopeFactory;
+        }
+
         System.Timers.Timer _timer;
         public bool IsStartedService { get; set; } = false;
 
@@ -28,7 +36,20 @@ namespace Don_GasConsumtionReport
         private void DoWork(object sender, ElapsedEventArgs e)
         {
             _timer.Stop();
-            // To Do
+
+            // Scriere Index gaz in Sql DataBase
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();
+
+                Raport.VerificareOraRaport(Raport.OraRaportCuptor, dbContext);
+
+                // La data ora setata se 
+                //dbContext.Add(new IndexModel { })
+                //_context.Add(plcModel);
+                //await _context.SaveChangesAsync();
+            }
+
             try
             {
                 PlcService.probaIncrementare++;
@@ -40,7 +61,7 @@ namespace Don_GasConsumtionReport
             }
             _timer.Start();
 
-            
+
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

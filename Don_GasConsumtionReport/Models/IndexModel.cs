@@ -11,5 +11,6 @@ namespace Don_GasConsumtionReport
         public string Data { get; set; }
         public string PlcName { get; set; }
         public int IndexValue { get; set; }
+        public int GazValue { get; set; }
     }
 }
