@@ -56,6 +56,8 @@
     let textBoxListaMailCuptor = document.getElementById("textBoxListaMailCuptor");
     // TextBox Ora raportare
     let textBoxOraRaportCuptor = document.getElementById("textBoxOraRaportCuptor");
+    // Text Block Data Ora Raport Efectuat
+    let textOraDataRaportFacutCuptor = document.getElementById("textOraDataRaportFacutCuptor");
 
     //// Variabile comenzi Setare lista mail si ora raportare Gadda    
     // Buton comanda setare
@@ -64,7 +66,10 @@
     let textBoxListaMailGadda = document.getElementById("textBoxListaMailGadda");
     // TextBox Ora raportare
     let textBoxOraRaportGadda = document.getElementById("textBoxOraRaportGadda");
-
+    // Text Block Data Ora Raport Efectuat
+    let textOraDataRaportFacutGaddaF2 = document.getElementById("textOraDataRaportFacutGaddaF2");
+    // Text Block Data Ora Raport Efectuat
+    let textOraDataRaportFacutGaddaF4 = document.getElementById("textOraDataRaportFacutGaddaF4");
     //// Variabile Index si consum cuptor & Gadda
     let textIndexCuptorUltim = document.getElementById("textIndexCuptorUltim");
     let textConsumCuptorUltim = document.getElementById("textConsumCuptorUltim");
@@ -72,7 +77,7 @@
     let textConsumGaddaF2Ultim = document.getElementById("textConsumGaddaF2Ultim");
     let textIndexGaddaF4Ultim = document.getElementById("textIndexGaddaF4Ultim");
     let textConsumGaddaF4Ultim = document.getElementById("textConsumGaddaF4Ultim");
-
+    let textBlockDataOraRaportFacut
 
     // Refresh parameters
     setInterval(function () {
@@ -105,7 +110,14 @@
                 console.log("Raspuns: " +response);
                 textIndexCuptorUltim.innerHTML = response.textBlockIndexCuptor.toString();
                 textIndexGaddaF2Ultim.innerHTML = response.textBlockIndexGaddaF2.toString();
-                textIndexGaddaF4Ultim.innerHTML = response.textBlockIndexGaddaF4.toString(); 
+                textIndexGaddaF4Ultim.innerHTML = response.textBlockIndexGaddaF4.toString();
+                textConsumCuptorUltim.innerHTML = response.textBlockConsumCuptor.toString();
+                textConsumGaddaF2Ultim.innerHTML = response.textBlockConsumGaddaF2.toString();
+                textConsumGaddaF4Ultim.innerHTML = response.textBlockConsumGaddaF4.toString();
+                textOraDataRaportFacutCuptor.innerHTML = response.textBlockDataOraRaportFacut.toString();
+                textOraDataRaportFacutGaddaF2.innerHTML = response.textBlockDataOraRaportFacut.toString();
+                textOraDataRaportFacutGaddaF4.innerHTML = response.textBlockDataOraRaportFacut.toString();
+                //response.textBlockDataOraRaportFacut.toString();
 
             },
             error: function (response) {

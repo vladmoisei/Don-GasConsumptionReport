@@ -14,6 +14,7 @@ namespace Don_GasConsumtionReport
         public static string OraRaportCuptor = "07:00:00";
         public static string OraRaportGadda = "07:00:00";
 
+        public static string DataOraRaportFacut = "0";
         // Index GAz
         public static uint IndexCuptor { get; set; } = 0;
         public static uint IndexGaddaF2 { get; set; } = 0;
@@ -67,8 +68,67 @@ namespace Don_GasConsumtionReport
         {
             context.Add(AddToIndexModelGasValue(indexModel));
             context.SaveChanges();
+            DataOraRaportFacut = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
         }
+
+        // Functie get last element added from Sql
+        public static IndexModel GetLastElementFromSql(string plcName, RaportareDbContext context)
+        {
+            // Salvare valoare index citita in varabile statice raport
+            switch (plcName)
+            {
+                case "PlcCuptor":                    
+                    if (IndexCuptor == 0)
+                    {
+                        return context.IndexModels.ToList().Where(model => model.PlcName == "PlcCuptor").LastOrDefault();               
+                    }                    
+                    break;
+                case "PlcGaddaF2":
+                    if (IndexGaddaF2 == 0)
+                    {
+                        return context.IndexModels.ToList().Where(model => model.PlcName == "PlcGaddaF2").LastOrDefault();
+                    }
+                    break;
+                case "PlcGaddaF4":
+                    if (IndexGaddaF4 == 0)
+                    {
+                        return context.IndexModels.ToList().Where(model => model.PlcName == "PlcGaddaF4").LastOrDefault();
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return new IndexModel { IndexValue = 0, GazValue=0, PlcName ="" };
+        }
+
+        // Functie actualizare a ultimului element la prima rulare in fiecare lista 
+        public static void UpdateLastElements(RaportareDbContext context)
+        {
+           if (IndexCuptor == 0)
+            {
+                IndexModel lastElementCuptor = GetLastElementFromSql("PlcCuptor", context);
+                IndexCuptor = (uint)lastElementCuptor.IndexValue;
+                ValoareConsumGazCuptor = lastElementCuptor.GazValue;
+                DataOraRaportFacut = lastElementCuptor.Data;
+            }
+           if (IndexGaddaF2 == 0)
+            {
+                IndexModel lastElementGaddaF2 = GetLastElementFromSql("PlcGaddaF2", context);
+                IndexGaddaF2 = (uint) lastElementGaddaF2.IndexValue;
+                ValoareConsumGazGaddaF2 = lastElementGaddaF2.GazValue;
+                DataOraRaportFacut = lastElementGaddaF2.Data;
+            }
+            if (IndexGaddaF4 == 0)
+            {
+                IndexModel lastElementGaddaF4 = GetLastElementFromSql("PlcGaddaF4", context);
+                IndexGaddaF4 = (uint)lastElementGaddaF4.IndexValue;
+                ValoareConsumGazGaddaF4 = lastElementGaddaF4.GazValue;
+                DataOraRaportFacut = lastElementGaddaF4.Data;
+            }
+        }
+
         // Functie verificare ora raport
+        // Setare Index si consum gaz PLC Cuptor, GaddaF2, GaddaF4 pt Plc-urile conectate
         public static bool VerificareOraRaport(string ora, RaportareDbContext context)
         {
             // Se verifica daca este ora raport

@@ -23,5 +23,9 @@ namespace Don_GasConsumtionReport
         public uint TextBlockIndexCuptor { get; set; }
         public uint TextBlockIndexGaddaF2 { get; set; }
         public uint TextBlockIndexGaddaF4 { get; set; }
+        public string TextBlockDataOraRaportFacut { get; set; }
+        public int TextBlockConsumCuptor { get; set; }
+        public int TextBlockConsumGaddaF2 { get; set; }
+        public int TextBlockConsumGaddaF4 { get; set; }
     }
 }

@@ -42,7 +42,8 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         {
             ViewBag.ServiceIsStarted = _backGroundService.IsStartedService.ToString();
             ViewBag.Val = PlcService.probaIncrementare;
-
+            // La prima rulare actualizare in view ultimele elemente adaugate in SQL
+            Raport.UpdateLastElements(_context);
             return View();
         }
 
@@ -57,7 +58,7 @@ using (JsonWriter writer = new JsonTextWriter(sw))
                 IsCreatedPlcCuptor = PlcService.IsCreatedPlcByName("PlcCuptor"),
                 IsConnectedPlcCuptor = PlcService.IsConnectedPlcByName("PlcCuptor"),
                 IsCreatedPlcGaddaF2 = PlcService.IsCreatedPlcByName("PlcGaddaF2"),
-                IsConnectedPlcGaddaF2= PlcService.IsConnectedPlcByName("PlcGaddaF2"),
+                IsConnectedPlcGaddaF2 = PlcService.IsConnectedPlcByName("PlcGaddaF2"),
                 IsCreatedPlcGaddaF4 = PlcService.IsCreatedPlcByName("PlcGaddaF4"),
                 IsConnectedPlcGaddaF4 = PlcService.IsConnectedPlcByName("PlcGaddaF4"),
                 TextBoxListaMailCuptor = Raport.ListaMailCuptor,
@@ -66,8 +67,13 @@ using (JsonWriter writer = new JsonTextWriter(sw))
                 TextBoxOraRaportGadda = Raport.OraRaportGadda,
                 TextBlockIndexCuptor = Raport.IndexCuptor,
                 TextBlockIndexGaddaF2 = Raport.IndexGaddaF2,
-                TextBlockIndexGaddaF4 = Raport.IndexGaddaF4
-              
+                TextBlockIndexGaddaF4 = Raport.IndexGaddaF4,
+                TextBlockConsumCuptor = Raport.ValoareConsumGazCuptor,
+                TextBlockConsumGaddaF2 = Raport.ValoareConsumGazGaddaF2,
+                TextBlockConsumGaddaF4 = Raport.ValoareConsumGazGaddaF4,
+                TextBlockDataOraRaportFacut = Raport.DataOraRaportFacut
+
+
             };
 
             return new JsonResult(dataToPass);
@@ -258,7 +264,7 @@ using (JsonWriter writer = new JsonTextWriter(sw))
 
         #region View Index: Setare ListaMail si oraRaport; index si consum Cuptor & Gadda
         // Set Lista mail si ora raport Plc Cuptor
-        public IActionResult SetListaMailOraRaportPlcCuptor(string listaMail,string oraRaport)
+        public IActionResult SetListaMailOraRaportPlcCuptor(string listaMail, string oraRaport)
         {
             Raport.ListaMailCuptor = listaMail;
             Raport.OraRaportCuptor = oraRaport;
@@ -288,17 +294,6 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         #region View IndexCuptor: Afisare lista index Cuptor
         public async Task<IActionResult> IndexCuptor()
         {
-
-                //ViewBag.UserName = HttpContext.Session.GetString("UserName");
-                //ViewBag.IsAdmin = HttpContext.Session.GetString("IsAdmin");
-                //List<ElindModel> listaDeAfisat = await _context.ElindModels.ToListAsync();
-                //// Daca e admin afisam toata lista
-                //if (ViewBag.IsAdmin == "True")
-                //    return View(listaDeAfisat);
-            // Daca nu e admin afisam doar datele introduse in ziua curenta
-            //return View(listaDeAfisat.Where(model => CalculeAuxiliar.IsCurrentDay(CalculeAuxiliar.ReturnareDataFromString(model.DataIntroducere))));
-
-
             List<IndexModel> listaDeAfisat = await _context.IndexModels.ToListAsync();
             return View(listaDeAfisat.Where(model => model.PlcName == "PlcCuptor" && Auxiliar.IsCurrentMonth(Auxiliar.ReturnareDataFromString(model.Data))));
         }

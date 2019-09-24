@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Don_GasConsumtionReport;
+using System.IO;
+using OfficeOpenXml;
 
 namespace Don_GasConsumtionReport.Controllers
 {
@@ -24,6 +26,51 @@ namespace Don_GasConsumtionReport.Controllers
             List<IndexModel> listaDeAfisat = await _context.IndexModels.ToListAsync();
             return View(listaDeAfisat.Where(model => model.PlcName == "PlcGaddaF2" && Auxiliar.IsCurrentMonth(Auxiliar.ReturnareDataFromString(model.Data))));
         }
+
+        // Functie exportare data to excel file
+        public async Task<IActionResult> ExportToExcelAsync(string dataFrom, string dataTo)
+        {
+            //return Content(dataFrom + "<==>" + dataTo);
+            List<IndexModel> listaSql = await _context.IndexModels.ToListAsync();
+            IEnumerable<IndexModel> listaExcel = listaSql.Where(model => model.PlcName == "PlcGaddaF2");
+
+            // Extrage datele cuprinse intre limitele date de operator
+            IEnumerable<IndexModel> listaDeAfisat = listaExcel.Where(model => Auxiliar.IsDateBetween(model.Data, dataFrom, dataTo));
+
+            var stream = new MemoryStream();
+
+            using (var pck = new ExcelPackage(stream))
+            {
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add("GaddaF2");
+                ws.Cells["A1:Z1"].Style.Font.Bold = true;
+
+                ws.Cells["A1"].Value = "Id";
+                ws.Cells["B1"].Value = "Data";
+                ws.Cells["C1"].Value = "Nume Plc";
+                ws.Cells["D1"].Value = "Index gaz";
+                ws.Cells["E1"].Value = "Consum gaz";
+
+                int rowStart = 2;
+                foreach (var elem in listaDeAfisat)
+                {
+                    ws.Cells[string.Format("A{0}", rowStart)].Value = elem.Id;
+                    ws.Cells[string.Format("B{0}", rowStart)].Value = elem.Data;
+                    ws.Cells[string.Format("C{0}", rowStart)].Value = elem.PlcName;
+                    ws.Cells[string.Format("D{0}", rowStart)].Value = elem.IndexValue;
+                    ws.Cells[string.Format("E{0}", rowStart)].Value = elem.GazValue;
+                    rowStart++;
+                }
+
+                ws.Cells["A:AZ"].AutoFitColumns();
+
+                pck.Save();
+            }
+            stream.Position = 0;
+            string excelName = "RaportGazGaddaF2.xlsx";
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+
+        }
+
 
         // GET: IndexModelsGaddaF2/Details/5
         public async Task<IActionResult> Details(int? id)

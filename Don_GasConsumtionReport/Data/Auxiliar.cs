@@ -44,8 +44,8 @@ namespace Don_GasConsumtionReport
         {
             // Convert string data received from View to DateTime format
             DateTime dataItem = Auxiliar.ReturnareDataFromString(dataItemString);
-            DateTime dataFrom = Auxiliar.ReturnareDataFromString(dataFromString + " 00:00");
-            DateTime dataTo = Auxiliar.ReturnareDataFromString(dataToString + " 00:00");
+            DateTime dataFrom = Auxiliar.ReturnareDataFromString(dataFromString + " 00:00:00");
+            DateTime dataTo = Auxiliar.ReturnareDataFromString(dataToString + " 00:00:00");
             if (dataItem.CompareTo(dataFrom) >= 0)
             {
                 if (dataItem.CompareTo(dataTo) <= 0)
