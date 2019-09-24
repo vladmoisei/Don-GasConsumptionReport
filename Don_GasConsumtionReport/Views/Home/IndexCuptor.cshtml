@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Don_GasConsumtionReport.IndexModel>
+
+@{
+    ViewData["Title"] = "Consum Cuptor";
+}
+
+<h2>View</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Data)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlcName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IndexValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GazValue)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Data)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlcName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IndexValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GazValue)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

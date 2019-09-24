@@ -8,11 +8,11 @@ namespace Don_GasConsumtionReport
 {
     public static class Raport
     {
-        public static string ListaMailCuptor = "";
-        public static string ListaMailGadda = "";
+        public static string ListaMailCuptor = "v.moisei@beltrame-group.com";
+        public static string ListaMailGadda = "v.moisei@beltrame-group.com";
 
-        public static string OraRaportCuptor = "";
-        public static string OraRaportGadda = "";
+        public static string OraRaportCuptor = "07:00:00";
+        public static string OraRaportGadda = "07:00:00";
 
         // Index GAz
         public static uint IndexCuptor { get; set; } = 0;
@@ -20,9 +20,9 @@ namespace Don_GasConsumtionReport
         public static uint IndexGaddaF4 { get; set; } = 0;
 
         // Valori consum gaz
-        public static int ValoareConsumGazCuptor { get; set; }
-        public static int ValoareConsumGazGaddaF2 { get; set; }
-        public static int ValoareConsumGazGaddaF4 { get; set; }
+        public static int ValoareConsumGazCuptor { get; set; } = 0;
+        public static int ValoareConsumGazGaddaF2 { get; set; } = 0;
+        public static int ValoareConsumGazGaddaF4 { get; set; } = 0;
         // TO DO
 
         /*
@@ -33,14 +33,39 @@ namespace Don_GasConsumtionReport
         // Functie Creare Index Object pentru salvare in SQL in functie de nume plc
         public static IndexModel GetIndexModelObject(string numePlc, uint valoareIndex)
         {
-            IndexModel indexModel = new IndexModel { Data = DateTime.Now.ToString("dd.MM.yyyy hh:mm:ss"), PlcName = numePlc, IndexValue =  (int)valoareIndex};
+            IndexModel indexModel = new IndexModel { Data = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"), PlcName = numePlc, IndexValue =  (int)valoareIndex};
+            return indexModel;
+        }
+
+        // Functie Set Consum gaz zilnic
+        public static IndexModel AddToIndexModelGasValue(IndexModel indexModel)
+        {
+            // Salvare valoare index citita in varabile statice raport
+            switch (indexModel.PlcName)
+            {
+                case "PlcCuptor":
+                    if (IndexCuptor != 0) ValoareConsumGazCuptor = (int)indexModel.IndexValue - (int)IndexCuptor;
+                    indexModel.GazValue = ValoareConsumGazCuptor;
+                    break;
+                case "PlcGaddaF2":
+                    if (IndexGaddaF2 != 0)  ValoareConsumGazGaddaF2 = (int)indexModel.IndexValue - (int)IndexGaddaF2;
+                    indexModel.GazValue = ValoareConsumGazGaddaF2;
+                    break;
+                case "PlcGaddaF4":
+                    if (IndexGaddaF4 != 0) ValoareConsumGazGaddaF4 = (int)indexModel.IndexValue - (int)IndexGaddaF4;
+                    indexModel.GazValue = ValoareConsumGazGaddaF4;
+                    break;
+                default:
+                    break;
+            }
+
             return indexModel;
         }
 
         // Functie salvare in database SQL index gaz model
         public static void AddToSqlIndex(RaportareDbContext context, IndexModel indexModel)
         {
-            context.Add(indexModel);
+            context.Add(AddToIndexModelGasValue(indexModel));
             context.SaveChanges();
         }
         // Functie verificare ora raport
@@ -57,17 +82,17 @@ namespace Don_GasConsumtionReport
                     // Salvare valoare index citita in varabile statice raport
                     switch (plc.PlcName)
                     {
-                        case "PlcCuptor":
+                        case "PlcCuptor":                            
+                            AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             IndexCuptor = plc.ValoareIndexGaz;
-                            AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             break;
-                        case "PlcGaddaF2":
+                        case "PlcGaddaF2":                            
+                            AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             IndexGaddaF2 = plc.ValoareIndexGaz; //Dint
-                            AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             break;
-                        case "PlcGaddaF4":
-                            IndexGaddaF4 = plc.ValoareIndexGaz; //Dint
+                        case "PlcGaddaF4":                            
                             AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
+                            IndexGaddaF4 = plc.ValoareIndexGaz; //Dint
                             break;
                         default:
                             break;
@@ -76,9 +101,6 @@ namespace Don_GasConsumtionReport
                     // Creare IndexModelObject pentru a salva in SQL Stabase
 
                 }
-
-
-
 
                 return true;
             }

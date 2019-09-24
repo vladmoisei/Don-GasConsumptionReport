@@ -8,6 +8,7 @@ using Don_GasConsumtionReport.Models;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using S7.Net;
+using Microsoft.EntityFrameworkCore;
 
 namespace Don_GasConsumtionReport.Controllers
 {
@@ -281,6 +282,25 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         public IActionResult ShowListaMailOraRaportPlcGadda()
         {
             return new JsonResult(new { Lista = Raport.ListaMailGadda, Ora = Raport.OraRaportGadda });
+        }
+        #endregion
+
+        #region View IndexCuptor: Afisare lista index Cuptor
+        public async Task<IActionResult> IndexCuptor()
+        {
+
+                //ViewBag.UserName = HttpContext.Session.GetString("UserName");
+                //ViewBag.IsAdmin = HttpContext.Session.GetString("IsAdmin");
+                //List<ElindModel> listaDeAfisat = await _context.ElindModels.ToListAsync();
+                //// Daca e admin afisam toata lista
+                //if (ViewBag.IsAdmin == "True")
+                //    return View(listaDeAfisat);
+            // Daca nu e admin afisam doar datele introduse in ziua curenta
+            //return View(listaDeAfisat.Where(model => CalculeAuxiliar.IsCurrentDay(CalculeAuxiliar.ReturnareDataFromString(model.DataIntroducere))));
+
+
+            List<IndexModel> listaDeAfisat = await _context.IndexModels.ToListAsync();
+            return View(listaDeAfisat.Where(model => model.PlcName == "PlcCuptor" && Auxiliar.IsCurrentMonth(Auxiliar.ReturnareDataFromString(model.Data))));
         }
         #endregion
 

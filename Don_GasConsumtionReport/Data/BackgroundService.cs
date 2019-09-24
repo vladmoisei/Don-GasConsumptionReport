@@ -24,7 +24,7 @@ namespace Don_GasConsumtionReport
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _timer = new System.Timers.Timer();
-            _timer.Interval = 500;
+            _timer.Interval = 700;
             _timer.Elapsed += DoWork;
             _timer.Start();
             IsStartedService = true;
@@ -42,8 +42,10 @@ namespace Don_GasConsumtionReport
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();
 
-                Raport.VerificareOraRaport(Raport.OraRaportCuptor, dbContext);
+                 if (Raport.VerificareOraRaport(Raport.OraRaportCuptor, dbContext))
+                    System.Threading.Thread.Sleep(1000); 
 
+                
                 // La data ora setata se 
                 //dbContext.Add(new IndexModel { })
                 //_context.Add(plcModel);
