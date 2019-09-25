@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -127,6 +130,24 @@ namespace Don_GasConsumtionReport
             }
         }
 
+        // Functie verificare daca este data 01 a lunii
+        public static bool IsFirstDayOfMonth()
+        {
+            if (DateTime.Now.Day == 1) return true;
+            return false;
+        }
+
+        // Functie salvare fisiere pentru luna precedenta pe data de 1 a lunii
+        public static void SaveExcelFilesForLastMonth(string numePlc, RaportareDbContext context)
+        {
+            if (IsFirstDayOfMonth())
+            {
+                string dataFrom = DateTime.Now.AddMonths(-1).ToString("dd.MM.yyyy");
+                string dataTo = DateTime.Now.ToString("dd.MM.yyyy");
+                SaveExcelFileToDisk(dataFrom, dataTo, numePlc, context);
+            }            
+        }
+
         // Functie verificare ora raport
         // Setare Index si consum gaz PLC Cuptor, GaddaF2, GaddaF4 pt Plc-urile conectate
         public static bool VerificareOraRaport(string ora, RaportareDbContext context)
@@ -145,14 +166,20 @@ namespace Don_GasConsumtionReport
                         case "PlcCuptor":                            
                             AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             IndexCuptor = plc.ValoareIndexGaz;
+                            // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
+                            SaveExcelFilesForLastMonth(plc.PlcName, context);
                             break;
                         case "PlcGaddaF2":                            
                             AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             IndexGaddaF2 = plc.ValoareIndexGaz; //Dint
+                            // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
+                            SaveExcelFilesForLastMonth(plc.PlcName, context);
                             break;
                         case "PlcGaddaF4":                            
                             AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             IndexGaddaF4 = plc.ValoareIndexGaz; //Dint
+                            // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
+                            SaveExcelFilesForLastMonth(plc.PlcName, context);
                             break;
                         default:
                             break;
@@ -169,27 +196,6 @@ namespace Don_GasConsumtionReport
 
 
 
-        // Functie Create Index daily at set hour into SQL Server
-        public static void CreateIndexIntoSqlCuptor(string plcName, RaportareDbContext dbContext)
-        {
-
-            // _context.Add(plcModel);
-            // await _context.SaveChangesAsync();
-
-        }
-
-        // Functie Create Consumption daily into SQL Server
-        public static void CreateConsumptionIntoSql(string plcName) { }
-
-        /*
-         * Functii get date (index, consum) in SQL Server
-         */
-
-        // Functie GET Index from Sql
-        public static string GetIndexFromSql(string plcName) { return ""; }
-        // Functie GET Consumption from SQL
-        public static string GetConsumptionFromSql(string plcName) { return ""; }
-
         /*
          * Functii trimitere mail zilnic si lunar
          */
@@ -201,10 +207,93 @@ namespace Don_GasConsumtionReport
         public static void SendEmailmonthly(string listaMail) { }
 
         /*
-         * Functii Get Report into Excel From SQL with Consumption and Index
+         * Functii creare folder si salvare fisiere exvcel cu consumul lunar
          */
-        // Functie Get Monthly Report intro Excel from Sql with Consumption
-        // O sa le fac in Controller
+        // Creare folder stocare fisiere consum gaz
+        public static string CreareFolderRaportare(string numePlc)
+        {
+            // Daca pui direct folderul de exp. Consum ... se salveaza in folderul radacina al proiectului
+            string path = string.Format(@"c:\Consum gaz/{0}/{1}", DateTime.Now.ToString("yyyy"), numePlc);
+            try
+            {
+                // Determine whether the directory exists.
+                if (Directory.Exists(path))
+                {
+                    // Console.WriteLine("That path exists already.");
+                    return path;
+                }
 
+                // Try to create the directory.
+                DirectoryInfo di = Directory.CreateDirectory(path);
+                // Console.WriteLine("The directory was created successfully at {0}.", Directory.GetCreationTime(path));
+
+                // Delete the directory.
+                //di.Delete();
+                //Console.WriteLine("The directory was deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                // Console.WriteLine("The process failed: {0}", e.ToString());
+                //MessageBox.Show(ex.Message);
+                //throw ex;
+            }
+
+            return path;
+        }
+
+        // Functie creare fisier excel cu consumul lunar
+        // Functie exportare data to excel file and save to disk
+        public static void SaveExcelFileToDisk(string dataFrom, string dataTo, string numePlc, RaportareDbContext _context)
+        {
+            //return Content(dataFrom + "<==>" + dataTo);
+            List<IndexModel> listaSql = _context.IndexModels.ToList();
+            IEnumerable<IndexModel> listaExcel = listaSql.Where(model => model.PlcName == numePlc);
+
+            // Extrage datele cuprinse intre limitele date de operator
+            IEnumerable<IndexModel> listaDeAfisat = listaExcel.Where(model => Auxiliar.IsDateBetween(model.Data, dataFrom, dataTo));
+
+            //var stream = new MemoryStream();
+
+            using (var pck = new ExcelPackage())
+            {
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add(numePlc);
+                ws.Cells["A1:Z1"].Style.Font.Bold = true;
+
+                ws.Cells["A1"].Value = "Id";
+                ws.Cells["B1"].Value = "Data";
+                ws.Cells["C1"].Value = "Nume Plc";
+                ws.Cells["D1"].Value = "Index gaz";
+                ws.Cells["E1"].Value = "Consum gaz";
+
+                int rowStart = 2;
+                foreach (var elem in listaDeAfisat)
+                {
+                    ws.Cells[string.Format("A{0}", rowStart)].Value = elem.Id;
+                    ws.Cells[string.Format("B{0}", rowStart)].Value = elem.Data;
+                    ws.Cells[string.Format("C{0}", rowStart)].Value = elem.PlcName;
+                    ws.Cells[string.Format("D{0}", rowStart)].Value = elem.IndexValue;
+                    ws.Cells[string.Format("E{0}", rowStart)].Value = elem.GazValue;
+                    rowStart++;
+                }
+
+                ws.Cells["A:AZ"].AutoFitColumns();
+
+                //Write the file to the disk
+                string excelName = "RaportGaz_" + numePlc + "_" + DateTime.Now.AddMonths(-1).ToString("MMMM") + ".xlsx";
+                string filePath = string.Format("{0}/{1}", Raport.CreareFolderRaportare(numePlc), excelName);
+                FileInfo fi = new FileInfo(filePath);
+                pck.SaveAs(fi);
+                //pck.Save();
+
+
+            }
+            //stream.Position = 0;
+            
+
+            
+
+            //return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+
+        }
     }
 }

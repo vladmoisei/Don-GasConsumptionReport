@@ -13,7 +13,7 @@ namespace Don_GasConsumtionReport
     {
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public BackgroundService(IServiceScopeFactory scopeFactory)
+        public BackgroundService(IServiceScopeFactory scopeFactory, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             _scopeFactory = scopeFactory;
         }
