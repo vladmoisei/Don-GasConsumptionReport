@@ -80,8 +80,10 @@ namespace Don_GasConsumtionReport
         public static IndexModel GetLastElementFromSql(string plcName, RaportareDbContext context)
         {
             // Salvare valoare index citita in varabile statice raport
+
             switch (plcName)
             {
+
                 case "PlcCuptor":
                     if (IndexCuptor == 0)
                     {
@@ -102,33 +104,41 @@ namespace Don_GasConsumtionReport
                     break;
                 default:
                     break;
+
             }
+
             return new IndexModel { IndexValue = 0, GazValue = 0, PlcName = "" };
         }
 
         // Functie actualizare a ultimului element la prima rulare in fiecare lista 
         public static void UpdateLastElements(RaportareDbContext context)
         {
-            if (IndexCuptor == 0)
+            try
             {
-                IndexModel lastElementCuptor = GetLastElementFromSql("PlcCuptor", context);
-                IndexCuptor = (uint)lastElementCuptor.IndexValue;
-                ValoareConsumGazCuptor = lastElementCuptor.GazValue;
-                DataOraRaportFacut = lastElementCuptor.Data;
+                if (IndexCuptor == 0)
+                {
+                    IndexModel lastElementCuptor = GetLastElementFromSql("PlcCuptor", context);
+                    IndexCuptor = (uint)lastElementCuptor.IndexValue;
+                    ValoareConsumGazCuptor = lastElementCuptor.GazValue;
+                    DataOraRaportFacut = lastElementCuptor.Data;
+                }
+                if (IndexGaddaF2 == 0)
+                {
+                    IndexModel lastElementGaddaF2 = GetLastElementFromSql("PlcGaddaF2", context);
+                    IndexGaddaF2 = (uint)lastElementGaddaF2.IndexValue;
+                    ValoareConsumGazGaddaF2 = lastElementGaddaF2.GazValue;
+                    DataOraRaportFacut = lastElementGaddaF2.Data;
+                }
+                if (IndexGaddaF4 == 0)
+                {
+                    IndexModel lastElementGaddaF4 = GetLastElementFromSql("PlcGaddaF4", context);
+                    IndexGaddaF4 = (uint)lastElementGaddaF4.IndexValue;
+                    ValoareConsumGazGaddaF4 = lastElementGaddaF4.GazValue;
+                    DataOraRaportFacut = lastElementGaddaF4.Data;
+                }
             }
-            if (IndexGaddaF2 == 0)
+            catch (NullReferenceException ex)
             {
-                IndexModel lastElementGaddaF2 = GetLastElementFromSql("PlcGaddaF2", context);
-                IndexGaddaF2 = (uint)lastElementGaddaF2.IndexValue;
-                ValoareConsumGazGaddaF2 = lastElementGaddaF2.GazValue;
-                DataOraRaportFacut = lastElementGaddaF2.Data;
-            }
-            if (IndexGaddaF4 == 0)
-            {
-                IndexModel lastElementGaddaF4 = GetLastElementFromSql("PlcGaddaF4", context);
-                IndexGaddaF4 = (uint)lastElementGaddaF4.IndexValue;
-                ValoareConsumGazGaddaF4 = lastElementGaddaF4.GazValue;
-                DataOraRaportFacut = lastElementGaddaF4.Data;
             }
         }
 
@@ -159,7 +169,7 @@ namespace Don_GasConsumtionReport
             if (DateTime.Now.ToString("HH:mm:ss") == ora)
             {
                 string filePathCuptor = "";
-                string filePathGaddaF2= "";
+                string filePathGaddaF2 = "";
                 string filePathGaddaF4 = "";
                 // Refresh values plc
                 PlcService.RefreshValuesListaPlc();
@@ -178,13 +188,13 @@ namespace Don_GasConsumtionReport
                         case "PlcGaddaF2":
                             AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             IndexGaddaF2 = plc.ValoareIndexGaz; //Dint
-                            // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
-                            filePathGaddaF2= SaveExcelFilesForLastMonth(plc.PlcName, context);
+                                                                // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
+                            filePathGaddaF2 = SaveExcelFilesForLastMonth(plc.PlcName, context);
                             break;
                         case "PlcGaddaF4":
                             AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             IndexGaddaF4 = plc.ValoareIndexGaz; //Dint
-                            // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
+                                                                // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
                             filePathGaddaF4 = SaveExcelFilesForLastMonth(plc.PlcName, context);
                             break;
                         default:
@@ -199,14 +209,15 @@ namespace Don_GasConsumtionReport
                 SendEmaildaily(ListaMailCuptor, subiectTextMailDaily, bodyTextMailDaily); // functie trimitere mail zilnic
 
                 // Functie trimitere mail lunar cu consumul inregistrat pe toata luna pe dat ade 1 a lunii
-                if (IsFirstDayOfMonth()) {
-                    string subiectTextMailMonthly = String.Format("Consum gaz Cuptor, Gadda F2 si F4 pe luna: {0}", 
+                if (IsFirstDayOfMonth())
+                {
+                    string subiectTextMailMonthly = String.Format("Consum gaz Cuptor, Gadda F2 si F4 pe luna: {0}",
                         DateTime.Now.AddMonths(-1).ToString("MMMM, yyyy"));
                     string bodyTextMailMonthly = string.Format("Buna dimineata. <br><br>Atasat gasiti consumul de gaz " +
-                        "inregistrat de contor gaz cuptor cu propuslie, Gadda F2 si F4 pe luna {0}. <br><br>O zi buna.", 
+                        "inregistrat de contor gaz cuptor cu propuslie, Gadda F2 si F4 pe luna {0}. <br><br>O zi buna.",
                     DateTime.Now.AddMonths(-1).ToString("MMMM, yyyy"));
                     // Functie trimitere mail lunar
-                    SendEmailmonthly(ListaMailGadda, subiectTextMailMonthly, bodyTextMailMonthly, filePathCuptor, 
+                    SendEmailmonthly(ListaMailGadda, subiectTextMailMonthly, bodyTextMailMonthly, filePathCuptor,
                         filePathGaddaF2, filePathGaddaF4);
                 }
                 return true;

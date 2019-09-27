@@ -54,7 +54,7 @@ namespace Don_GasConsumtionReport
 
             try
             {
-                PlcService.probaIncrementare++;
+                //PlcService.probaIncrementare++; incrementare de proba
             }
             catch (NullReferenceException exNull)
             {

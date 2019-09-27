@@ -41,7 +41,8 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         public IActionResult Index()
         {
             ViewBag.ServiceIsStarted = _backGroundService.IsStartedService.ToString();
-            ViewBag.Val = PlcService.probaIncrementare;
+            //ViewBag.Val = PlcService.probaIncrementare; proba incrementare
+            
             // La prima rulare actualizare in view ultimele elemente adaugate in SQL
             Raport.UpdateLastElements(_context);
             return View();
