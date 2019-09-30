@@ -42,9 +42,7 @@ namespace Don_GasConsumtionReport
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();
 
-                 if (Raport.VerificareOraRaport(Raport.OraRaportCuptor, dbContext))
-                    System.Threading.Thread.Sleep(1000); 
-
+                Raport.VerificareOraRaport(Raport.OraRaportCuptor, dbContext);
                 
                 // La data ora setata se 
                 //dbContext.Add(new IndexModel { })

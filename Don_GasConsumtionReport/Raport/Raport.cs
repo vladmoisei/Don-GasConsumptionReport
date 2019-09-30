@@ -35,7 +35,6 @@ namespace Don_GasConsumtionReport
          * Functii inregistrare date (index, consum) in SQL Server
          */
 
-
         // Functie Creare Index Object pentru salvare in SQL in functie de nume plc
         public static IndexModel GetIndexModelObject(string numePlc, uint valoareIndex)
         {
@@ -83,7 +82,6 @@ namespace Don_GasConsumtionReport
 
             switch (plcName)
             {
-
                 case "PlcCuptor":
                     if (IndexCuptor == 0)
                     {
@@ -165,7 +163,18 @@ namespace Don_GasConsumtionReport
         // Setare Index si consum gaz PLC Cuptor, GaddaF2, GaddaF4 pt Plc-urile conectate
         public static bool VerificareOraRaport(string ora, RaportareDbContext context)
         {
-            // Se verifica daca este ora raport
+            // La 10 minute verificam conexiune PLc-uri, si daca nu e facuta, incercam sa o refacem
+            if (DateTime.Now.ToString("HH:mm:ss").Substring(4, 4) == "5:00")
+            {
+                // Verificare conexiune Plc-uri, tinem in viata conexiunea cu plc-urile
+                foreach (PlcObjectModel plc in PlcService.ListaPlc)
+                {
+                    if (!plc._client.IsConnected)
+                        if (plc.IsAvailableIpAdress())
+                            plc.ConnectPlc();
+                }
+            }
+            // Se verifica daca este ora raport si se inregistreaza date in SQL, se trimite mail
             if (DateTime.Now.ToString("HH:mm:ss") == ora)
             {
                 string filePathCuptor = "";
@@ -220,11 +229,11 @@ namespace Don_GasConsumtionReport
                     SendEmailmonthly(ListaMailGadda, subiectTextMailMonthly, bodyTextMailMonthly, filePathCuptor,
                         filePathGaddaF2, filePathGaddaF4);
                 }
+                System.Threading.Thread.Sleep(1000);
                 return true;
             }
             return false;
         }
-
 
 
         /*
@@ -497,6 +506,11 @@ namespace Don_GasConsumtionReport
 
         }
 
+        // Functie daca lista PLC este goala, cream PLC-uri si le conectam
+        public static void RemakePlcConnectionWhenAvailable(string numePlc)
+        {
+
+        }
 
     }
 }
