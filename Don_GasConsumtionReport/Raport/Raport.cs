@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace Don_GasConsumtionReport
@@ -37,7 +39,7 @@ namespace Don_GasConsumtionReport
         // Functie Creare Index Object pentru salvare in SQL in functie de nume plc
         public static IndexModel GetIndexModelObject(string numePlc, uint valoareIndex)
         {
-            IndexModel indexModel = new IndexModel { Data = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"), PlcName = numePlc, IndexValue =  (int)valoareIndex};
+            IndexModel indexModel = new IndexModel { Data = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"), PlcName = numePlc, IndexValue = (int)valoareIndex };
             return indexModel;
         }
 
@@ -52,7 +54,7 @@ namespace Don_GasConsumtionReport
                     indexModel.GazValue = ValoareConsumGazCuptor;
                     break;
                 case "PlcGaddaF2":
-                    if (IndexGaddaF2 != 0)  ValoareConsumGazGaddaF2 = (int)indexModel.IndexValue - (int)IndexGaddaF2;
+                    if (IndexGaddaF2 != 0) ValoareConsumGazGaddaF2 = (int)indexModel.IndexValue - (int)IndexGaddaF2;
                     indexModel.GazValue = ValoareConsumGazGaddaF2;
                     break;
                 case "PlcGaddaF4":
@@ -80,11 +82,11 @@ namespace Don_GasConsumtionReport
             // Salvare valoare index citita in varabile statice raport
             switch (plcName)
             {
-                case "PlcCuptor":                    
+                case "PlcCuptor":
                     if (IndexCuptor == 0)
                     {
-                        return context.IndexModels.ToList().Where(model => model.PlcName == "PlcCuptor").LastOrDefault();               
-                    }                    
+                        return context.IndexModels.ToList().Where(model => model.PlcName == "PlcCuptor").LastOrDefault();
+                    }
                     break;
                 case "PlcGaddaF2":
                     if (IndexGaddaF2 == 0)
@@ -101,23 +103,23 @@ namespace Don_GasConsumtionReport
                 default:
                     break;
             }
-            return new IndexModel { IndexValue = 0, GazValue=0, PlcName ="" };
+            return new IndexModel { IndexValue = 0, GazValue = 0, PlcName = "" };
         }
 
         // Functie actualizare a ultimului element la prima rulare in fiecare lista 
         public static void UpdateLastElements(RaportareDbContext context)
         {
-           if (IndexCuptor == 0)
+            if (IndexCuptor == 0)
             {
                 IndexModel lastElementCuptor = GetLastElementFromSql("PlcCuptor", context);
                 IndexCuptor = (uint)lastElementCuptor.IndexValue;
                 ValoareConsumGazCuptor = lastElementCuptor.GazValue;
                 DataOraRaportFacut = lastElementCuptor.Data;
             }
-           if (IndexGaddaF2 == 0)
+            if (IndexGaddaF2 == 0)
             {
                 IndexModel lastElementGaddaF2 = GetLastElementFromSql("PlcGaddaF2", context);
-                IndexGaddaF2 = (uint) lastElementGaddaF2.IndexValue;
+                IndexGaddaF2 = (uint)lastElementGaddaF2.IndexValue;
                 ValoareConsumGazGaddaF2 = lastElementGaddaF2.GazValue;
                 DataOraRaportFacut = lastElementGaddaF2.Data;
             }
@@ -138,14 +140,15 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie salvare fisiere pentru luna precedenta pe data de 1 a lunii
-        public static void SaveExcelFilesForLastMonth(string numePlc, RaportareDbContext context)
+        public static string SaveExcelFilesForLastMonth(string numePlc, RaportareDbContext context)
         {
             if (IsFirstDayOfMonth())
             {
                 string dataFrom = DateTime.Now.AddMonths(-1).ToString("dd.MM.yyyy");
                 string dataTo = DateTime.Now.ToString("dd.MM.yyyy");
-                SaveExcelFileToDisk(dataFrom, dataTo, numePlc, context);
-            }            
+                return SaveExcelFileToDisk(dataFrom, dataTo, numePlc, context);
+            }
+            return "";
         }
 
         // Functie verificare ora raport
@@ -155,6 +158,9 @@ namespace Don_GasConsumtionReport
             // Se verifica daca este ora raport
             if (DateTime.Now.ToString("HH:mm:ss") == ora)
             {
+                string filePathCuptor = "";
+                string filePathGaddaF2= "";
+                string filePathGaddaF4 = "";
                 // Refresh values plc
                 PlcService.RefreshValuesListaPlc();
 
@@ -163,32 +169,46 @@ namespace Don_GasConsumtionReport
                     // Salvare valoare index citita in varabile statice raport
                     switch (plc.PlcName)
                     {
-                        case "PlcCuptor":                            
+                        case "PlcCuptor":
                             AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             IndexCuptor = plc.ValoareIndexGaz;
                             // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
-                            SaveExcelFilesForLastMonth(plc.PlcName, context);
+                            filePathCuptor = SaveExcelFilesForLastMonth(plc.PlcName, context);
                             break;
-                        case "PlcGaddaF2":                            
+                        case "PlcGaddaF2":
                             AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             IndexGaddaF2 = plc.ValoareIndexGaz; //Dint
                             // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
-                            SaveExcelFilesForLastMonth(plc.PlcName, context);
+                            filePathGaddaF2= SaveExcelFilesForLastMonth(plc.PlcName, context);
                             break;
-                        case "PlcGaddaF4":                            
+                        case "PlcGaddaF4":
                             AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
                             IndexGaddaF4 = plc.ValoareIndexGaz; //Dint
                             // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
-                            SaveExcelFilesForLastMonth(plc.PlcName, context);
+                            filePathGaddaF4 = SaveExcelFilesForLastMonth(plc.PlcName, context);
                             break;
                         default:
                             break;
                     }
-
-                    // Creare IndexModelObject pentru a salva in SQL Stabase
-
                 }
 
+                // Trimitere mail
+                string subiectTextMailDaily = String.Format("Consum gaz Cuptor, Gadda pe data: {0}",
+                    DateTime.Now.ToString("dd MMMM, yyyy"));
+                string bodyTextMailDaily = ReturnBodyMailTextDaily(GetJsonForMail());
+                SendEmaildaily(ListaMailCuptor, subiectTextMailDaily, bodyTextMailDaily); // functie trimitere mail zilnic
+
+                // Functie trimitere mail lunar cu consumul inregistrat pe toata luna pe dat ade 1 a lunii
+                if (IsFirstDayOfMonth()) {
+                    string subiectTextMailMonthly = String.Format("Consum gaz Cuptor, Gadda F2 si F4 pe luna: {0}", 
+                        DateTime.Now.AddMonths(-1).ToString("MMMM, yyyy"));
+                    string bodyTextMailMonthly = string.Format("Buna dimineata. <br><br>Atasat gasiti consumul de gaz " +
+                        "inregistrat de contor gaz cuptor cu propuslie, Gadda F2 si F4 pe luna {0}. <br><br>O zi buna.", 
+                    DateTime.Now.AddMonths(-1).ToString("MMMM, yyyy"));
+                    // Functie trimitere mail lunar
+                    SendEmailmonthly(ListaMailGadda, subiectTextMailMonthly, bodyTextMailMonthly, filePathCuptor, 
+                        filePathGaddaF2, filePathGaddaF4);
+                }
                 return true;
             }
             return false;
@@ -200,11 +220,187 @@ namespace Don_GasConsumtionReport
          * Functii trimitere mail zilnic si lunar
          */
 
-        // Functie Send Email daily with Consumption
-        public static void SendEmaildaily(string listaMail) { }
+        // Functie trimitere mail
+        public static void TrimitereRaportMail(string adreseMailDeTrimis, string filePathDeTrimis, string subiect)
+        {
+            try
+            {
+                // "don.rap.ajustaj@gmail.com", "v.moisei@beltrame-group.com, vladmoisei@yahoo.com"
+                // Mail(emailFrom , emailTo)
+                MailMessage mail = new MailMessage("don.rap.ajustaj@gmail.com", adreseMailDeTrimis);
+
+                //mail.From = new MailAddress("don.rap.ajustaj@gmail.com");
+                mail.Subject = "Consum gaz cuptor cu propulsie";
+                string Body = string.Format("Buna dimineata. <br>Atasat gasiti consumul de gaz inregistrat de contor gaz " +
+                    "cuptor cu propuslie pe luna {0}. <br>O zi buna.", DateTime.Now.AddMonths(-1).ToString("MMMM, yyyy"));
+                mail.Body = Body;
+                mail.IsBodyHtml = true;
+                using (Attachment attachment = new Attachment(filePathDeTrimis))
+                {
+                    mail.Attachments.Add(attachment);
+
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.Host = "smtp.gmail.com"; //Or Your SMTP Server Address
+                    smtp.Credentials = new System.Net.NetworkCredential("don.rap.ajustaj@gmail.com", "Beltrame.1");
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+
+                    mail = null;
+                    smtp = null;
+                }
+
+                // Console.WriteLine("Mail Sent succesfully");
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+                // Console.WriteLine(ex.ToString());
+                throw ex;
+            }
+        }
+
+        // Functie Send Email daily with Consumption of Gas
+        public static void SendEmaildaily(string adreseMailDeTrimis, string subiectText, string bodyText)
+        {
+            try
+            {
+                // "don.rap.ajustaj@gmail.com", "v.moisei@beltrame-group.com, vladmoisei@yahoo.com"
+                // Mail(emailFrom , emailTo)
+                MailMessage mail = new MailMessage("don.rap.ajustaj@gmail.com", adreseMailDeTrimis);
+
+                //mail.From = new MailAddress("don.rap.ajustaj@gmail.com");
+                mail.Subject = subiectText;
+                string Body = string.Format("Buna dimineata. <br>Atasat gasiti consumul de gaz inregistrat de contor gaz " +
+                    "cuptor cu propuslie pe luna {0}. <br>O zi buna.", DateTime.Now.AddMonths(-1).ToString("MMMM, yyyy"));
+                mail.Body = bodyText;
+                mail.IsBodyHtml = true;
+                //using (Attachment attachmentCuptor = new Attachment(""), attachmentGaddaF2 = new Attachment(""), attachmentGaddaF4 = new Attachment(""))
+                //{
+                //    mail.Attachments.Add(attachment);
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com"; //Or Your SMTP Server Address
+                smtp.Credentials = new System.Net.NetworkCredential("don.rap.ajustaj@gmail.com", "Beltrame.1");
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+
+                mail = null;
+                smtp = null;
+                //}
+
+                // Console.WriteLine("Mail Sent succesfully");
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+                // Console.WriteLine(ex.ToString());
+                //throw ex;
+            }
+        }
 
         // Functie Send Email monthly with Consumption for all month
-        public static void SendEmailmonthly(string listaMail) { }
+        public static void SendEmailmonthly(string adreseMailDeTrimis, string subiectText, string bodyText,
+            string filePathDeTrimisCuptor, string filePathDeTrimisGaddaF2, string filePathDeTrimisGaddaF4)
+        {
+            try
+            {
+                // "don.rap.ajustaj@gmail.com", "v.moisei@beltrame-group.com, vladmoisei@yahoo.com"
+                // Mail(emailFrom , emailTo)
+                MailMessage mail = new MailMessage("don.rap.ajustaj@gmail.com", adreseMailDeTrimis);
+
+                //mail.From = new MailAddress("don.rap.ajustaj@gmail.com");
+                mail.Subject = subiectText;
+                string Body = string.Format("Buna dimineata. <br>Atasat gasiti consumul de gaz inregistrat de contor gaz " +
+                    "cuptor cu propuslie pe luna {0}. <br>O zi buna.", DateTime.Now.AddMonths(-1).ToString("MMMM, yyyy"));
+                mail.Body = bodyText;
+                mail.IsBodyHtml = true;
+                using (Attachment attachmentCuptor = new Attachment(filePathDeTrimisCuptor),
+                    attachmentGaddaF2 = new Attachment(filePathDeTrimisGaddaF2),
+                    attachmentGaddaF4 = new Attachment(filePathDeTrimisGaddaF4))
+                {
+                    mail.Attachments.Add(attachmentCuptor);
+                    mail.Attachments.Add(attachmentGaddaF2);
+                    mail.Attachments.Add(attachmentGaddaF4);
+
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.Host = "smtp.gmail.com"; //Or Your SMTP Server Address
+                    smtp.Credentials = new System.Net.NetworkCredential("don.rap.ajustaj@gmail.com", "Beltrame.1");
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+
+                    mail = null;
+                    smtp = null;
+                }
+
+                // Console.WriteLine("Mail Sent succesfully");
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+                // Console.WriteLine(ex.ToString());
+                //throw ex;
+            }
+        }
+
+        // Functie return Json cu text varabile index si consum pentru cuptor si Gadda
+        public static string GetJsonForMail()
+        {
+            //    // Index GAz
+            //public static uint IndexCuptor { get; set; } = 0;
+            //public static uint IndexGaddaF2 { get; set; } = 0;
+            //public static uint IndexGaddaF4 { get; set; } = 0;
+
+            //// Valori consum gaz
+            //public static int ValoareConsumGazCuptor { get; set; } = 0;
+            //public static int ValoareConsumGazGaddaF2 { get; set; } = 0;
+            //public static int ValoareConsumGazGaddaF4 { get; set; } = 0;
+            string json = JsonConvert.SerializeObject(new
+            {
+                indexCuptor = IndexCuptor,
+                indexGaddaF2 = IndexGaddaF2,
+                indexGaddaF4 = IndexGaddaF4,
+                valoareConsumGazCuptor = ValoareConsumGazCuptor,
+                valoareConsumGazGaddaF2 = ValoareConsumGazGaddaF2,
+                valoareConsumGazGaddaF4 = ValoareConsumGazGaddaF4
+            });
+            return json;
+        }
+
+        // Functie setare text body mail daily cu consum gaz
+        public static string ReturnBodyMailTextDaily(string json)
+        {
+            var definition = new
+            {
+                indexCuptor = 0,
+                indexGaddaF2 = 0,
+                indexGaddaF4 = 0,
+                valoareConsumGazCuptor = 0,
+                valoareConsumGazGaddaF2 = 0,
+                valoareConsumGazGaddaF4 = 0
+            };
+
+            var jsonResult = JsonConvert.DeserializeAnonymousType(json, definition);
+
+            string Body = string.Format("Buna dimineata. <br>Atasat gasiti indexul cat si consumul de gaz pentru: " +
+                "cuptor cu propuslie, Gadda cuptor F2, Gadda cuptor F4:<br>" +
+                "<br>Index Cuptor: {0}" +
+                "<br>Index GaddaF2: {1}" +
+                "<br>Index GaddaF4: {2}<br>" +
+                "<br>Consum Cuptor: <strong>{3}</strong>" +
+                "<br>Consum GaddaF2: <strong>{4}</strong>" +
+                "<br>Consum GaddaF4: <strong>{5}</strong><br>" +
+                "<br>O zi buna.",
+                jsonResult.indexCuptor,
+                jsonResult.indexGaddaF2,
+                jsonResult.indexGaddaF4,
+                jsonResult.valoareConsumGazCuptor,
+                jsonResult.valoareConsumGazGaddaF2,
+                jsonResult.valoareConsumGazGaddaF4);
+            return Body;
+        }
 
         /*
          * Functii creare folder si salvare fisiere exvcel cu consumul lunar
@@ -243,7 +439,8 @@ namespace Don_GasConsumtionReport
 
         // Functie creare fisier excel cu consumul lunar
         // Functie exportare data to excel file and save to disk
-        public static void SaveExcelFileToDisk(string dataFrom, string dataTo, string numePlc, RaportareDbContext _context)
+        // returneaza FilePath
+        public static string SaveExcelFileToDisk(string dataFrom, string dataTo, string numePlc, RaportareDbContext _context)
         {
             //return Content(dataFrom + "<==>" + dataTo);
             List<IndexModel> listaSql = _context.IndexModels.ToList();
@@ -284,16 +481,11 @@ namespace Don_GasConsumtionReport
                 FileInfo fi = new FileInfo(filePath);
                 pck.SaveAs(fi);
                 //pck.Save();
-
-
+                return filePath;
             }
-            //stream.Position = 0;
-            
-
-            
-
-            //return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
 
         }
+
+
     }
 }

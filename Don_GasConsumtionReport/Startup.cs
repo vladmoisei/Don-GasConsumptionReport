@@ -33,9 +33,9 @@ namespace Don_GasConsumtionReport
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            // @"Server=172.16.4.165\SQLEXPRESS;Database=ColctareDataAjustajDatabase;
+            // @"Server=172.16.4.165\SQLEXPRESS;Database=ConsumGazDatabase;
             services.AddDbContext<RaportareDbContext>(options =>
-            options.UseSqlServer(@"Server=172.16.4.165\SQLEXPRESS;Database=ConsumGazDatabase;User Id=sa; Password=Calarasi81; MultipleActiveResultSets=true;"));
+            options.UseSqlServer(@"Server=.\SQLEXPRESS;Database=ConsumGazDatabase;User Id=sa; Password=Calarasi81; MultipleActiveResultSets=true;"));
 
             //Adaug BackgroundService
             services.AddSingleton<IHostedService, BackgroundService>();
