@@ -173,6 +173,8 @@ namespace Don_GasConsumtionReport
                         if (plc.IsAvailableIpAdress())
                             plc.ConnectPlc();
                 }
+                // Refresh values
+                PlcService.RefreshValuesListaPlc();
             }
             // Se verifica daca este ora raport si se inregistreaza date in SQL, se trimite mail
             if (DateTime.Now.ToString("HH:mm:ss") == ora)
