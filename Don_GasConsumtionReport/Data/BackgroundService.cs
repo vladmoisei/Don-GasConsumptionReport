@@ -36,12 +36,11 @@ namespace Don_GasConsumtionReport
         private void DoWork(object sender, ElapsedEventArgs e)
         {
             _timer.Stop();
-
+            Raport.ListaPlc = PlcService.ListaPlc;
             // Scriere Index gaz in Sql DataBase
             using (var scope = _scopeFactory.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();
-
+            {                
+                var dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();                
                 Raport.VerificareOraRaport(Raport.OraRaportCuptor, dbContext);
                 
                 // La data ora setata se 
