@@ -11,7 +11,12 @@ namespace Don_GasConsumtionReport
 {
     public class BackgroundService : IHostedService, IDisposable
     {
+        // Variable Scope factory, furnizor servicii
         private readonly IServiceScopeFactory _scopeFactory;
+        // Variable DbContext
+        private RaportareDbContext dbContext;
+        // Variable Scope supply
+        private IServiceScope scope;
 
         public BackgroundService(IServiceScopeFactory scopeFactory, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
@@ -29,6 +34,11 @@ namespace Don_GasConsumtionReport
             _timer.Start();
             IsStartedService = true;
 
+            // Start Scope service pentru a returna dbContext
+            scope = _scopeFactory.CreateScope();
+            // Creare dBContext din Scope
+            dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();
+
             PlcService.probaIncrementare = 10;
             return Task.CompletedTask;
         }
@@ -36,18 +46,18 @@ namespace Don_GasConsumtionReport
         private void DoWork(object sender, ElapsedEventArgs e)
         {
             _timer.Stop();
-            Raport.ListaPlc = PlcService.ListaPlc;
+            //Raport.ListaPlc = PlcService.ListaPlc;
             // Scriere Index gaz in Sql DataBase
-            using (var scope = _scopeFactory.CreateScope())
-            {                
-                var dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();                
+            //using (var scope = _scopeFactory.CreateScope())
+            //{                
+                //var dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();                
                 Raport.VerificareOraRaport(Raport.OraRaportCuptor, dbContext);
                 
                 // La data ora setata se 
                 //dbContext.Add(new IndexModel { })
                 //_context.Add(plcModel);
                 //await _context.SaveChangesAsync();
-            }
+            //}
 
             try
             {
