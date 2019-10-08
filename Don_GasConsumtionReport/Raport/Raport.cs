@@ -13,7 +13,7 @@ namespace Don_GasConsumtionReport
 {
     public static class Raport
     {
-        public static List<PlcObjectModel> ListaPlc;
+
         public static string ListaMailCuptor = "v.moisei@beltrame-group.com";
         public static string ListaMailGadda = "v.moisei@beltrame-group.com";
 

@@ -11,6 +11,8 @@ namespace Don_GasConsumtionReport
 {
     public class BackgroundService : IHostedService, IDisposable
     {
+        // Lista Plc Objects
+        List<PlcObjectModel> ListaPlc;
         // Variable Scope factory, furnizor servicii
         private readonly IServiceScopeFactory _scopeFactory;
         // Variable DbContext
@@ -21,6 +23,8 @@ namespace Don_GasConsumtionReport
         public BackgroundService(IServiceScopeFactory scopeFactory, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             _scopeFactory = scopeFactory;
+            // Initializare lista plc object
+            ListaPlc = new List<PlcObjectModel>();
         }
 
         System.Timers.Timer _timer;
@@ -38,6 +42,8 @@ namespace Don_GasConsumtionReport
             scope = _scopeFactory.CreateScope();
             // Creare dBContext din Scope
             dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();
+            // Transfer lista plc din backgroundService in PlcService
+            PlcService.ListaPlc = ListaPlc;
 
             PlcService.probaIncrementare = 10;
             return Task.CompletedTask;

@@ -9,7 +9,7 @@ namespace Don_GasConsumtionReport
     public static class PlcService
     {
         public static int probaIncrementare;
-        public static List<PlcObjectModel> ListaPlc = new List<PlcObjectModel>();
+        public static List<PlcObjectModel> ListaPlc;
 
         // Functie verificare daca exista PLC in lista in functie de nume
         public static bool IsCreatedPlcByName(string numePlc)
