@@ -122,13 +122,17 @@
 
                 //response.textBlockDataOraRaportFacut.toString();
 
+                // Refresh pagina site pentru a nu pierde valori
+                var currentdate = new Date();
+                if (currentdate.getMinutes().toString().substring(1, 2) === "5" && currentdate.getSeconds() === 0)
+                    location.reload(true); // Refresh pagina (de pe server) la fiecare 10 minute 
             },
             error: function (response) {
                 console.log("Nu a mers call functie UpdateParameters");
             }
 
         });
-
+        
         // refresh pagina
         //location.reload();
     }, 1000);
