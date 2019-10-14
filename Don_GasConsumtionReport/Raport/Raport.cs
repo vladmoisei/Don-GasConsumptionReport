@@ -11,40 +11,66 @@ using System.Threading.Tasks;
 
 namespace Don_GasConsumtionReport
 {
-    public static class Raport
+    public class Raport
     {
 
-        public static string ListaMailCuptor = "v.moisei@beltrame-group.com";
-        public static string ListaMailGadda = "v.moisei@beltrame-group.com";
+        // PlcService 
+        public PlcService PlcServiceObject { get; set; }
 
-        public static string OraRaportCuptor = "07:00:00";
-        public static string OraRaportGadda = "07:00:00";
+        // Lista mail de trimis
+        public string ListaMailCuptor;
+        public string ListaMailGadda;
+        public string OraRaportCuptor;
+        public string OraRaportGadda;
 
-        public static string DataOraRaportFacut = "0";
+        public string DataOraRaportFacut;
         // Index GAz
-        public static uint IndexCuptor { get; set; } = 0;
-        public static uint IndexGaddaF2 { get; set; } = 0;
-        public static uint IndexGaddaF4 { get; set; } = 0;
+        public uint IndexCuptor { get; set; }
+        public uint IndexGaddaF2 { get; set; }
+        public uint IndexGaddaF4 { get; set; }
 
         // Valori consum gaz
-        public static int ValoareConsumGazCuptor { get; set; } = 0;
-        public static int ValoareConsumGazGaddaF2 { get; set; } = 0;
-        public static int ValoareConsumGazGaddaF4 { get; set; } = 0;
+        public int ValoareConsumGazCuptor { get; set; }
+        public int ValoareConsumGazGaddaF2 { get; set; }
+        public int ValoareConsumGazGaddaF4 { get; set; }
         // TO DO
 
+
+        // Constructor
+        public Raport()
+        {
+            // Initializare PlcService
+            PlcServiceObject = new PlcService
+            {
+                ListaPlc = new List<PlcObjectModel>()
+            };
+            // Initializare proprietati
+            ListaMailCuptor = "v.moisei@beltrame-group.com";
+            ListaMailGadda = "v.moisei@beltrame-group.com";
+            OraRaportCuptor = "06:59:00";
+            OraRaportGadda = "06:59:00";
+            DataOraRaportFacut = "0";
+            IndexCuptor = 0;
+            IndexGaddaF2 = 0;
+            IndexGaddaF4 = 0;
+            ValoareConsumGazCuptor = 0;
+            ValoareConsumGazGaddaF2 = 0;
+            ValoareConsumGazGaddaF4 = 0;
+
+        }
         /*
          * Functii inregistrare date (index, consum) in SQL Server
          */
 
         // Functie Creare Index Object pentru salvare in SQL in functie de nume plc
-        public static IndexModel GetIndexModelObject(string numePlc, uint valoareIndex)
+        public IndexModel GetIndexModelObject(string numePlc, uint valoareIndex)
         {
             IndexModel indexModel = new IndexModel { Data = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"), PlcName = numePlc, IndexValue = (int)valoareIndex };
             return indexModel;
         }
 
         // Functie Set Consum gaz zilnic
-        public static IndexModel AddToIndexModelGasValue(IndexModel indexModel)
+        public IndexModel AddToIndexModelGasValue(IndexModel indexModel)
         {
             // Salvare valoare index citita in varabile statice raport
             switch (indexModel.PlcName)
@@ -69,7 +95,7 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie salvare in database SQL index gaz model
-        public static void AddToSqlIndex(RaportareDbContext context, IndexModel indexModel)
+        public void AddToSqlIndex(RaportareDbContext context, IndexModel indexModel)
         {
             context.Add(AddToIndexModelGasValue(indexModel));
             context.SaveChanges();
@@ -77,7 +103,7 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie get last element added from Sql
-        public static IndexModel GetLastElementFromSql(string plcName, RaportareDbContext context)
+        public IndexModel GetLastElementFromSql(string plcName, RaportareDbContext context)
         {
             // Salvare valoare index citita in varabile statice raport
 
@@ -110,7 +136,7 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie actualizare a ultimului element la prima rulare in fiecare lista 
-        public static void UpdateLastElements(RaportareDbContext context)
+        public void UpdateLastElements(RaportareDbContext context)
         {
             try
             {
@@ -142,14 +168,14 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie verificare daca este data 01 a lunii
-        public static bool IsFirstDayOfMonth()
+        public bool IsFirstDayOfMonth()
         {
             if (DateTime.Now.Day == 1) return true;
             return false;
         }
 
         // Functie salvare fisiere pentru luna precedenta pe data de 1 a lunii
-        public static string SaveExcelFilesForLastMonth(string numePlc, RaportareDbContext context)
+        public string SaveExcelFilesForLastMonth(string numePlc, RaportareDbContext context)
         {
             if (IsFirstDayOfMonth())
             {
@@ -162,20 +188,20 @@ namespace Don_GasConsumtionReport
 
         // Functie verificare ora raport
         // Setare Index si consum gaz PLC Cuptor, GaddaF2, GaddaF4 pt Plc-urile conectate
-        public static bool VerificareOraRaport(string ora, RaportareDbContext context)
+        public bool VerificareOraRaport(string ora, RaportareDbContext context)
         {
             // La 10 minute verificam conexiune PLc-uri, si daca nu e facuta, incercam sa o refacem
             if (DateTime.Now.ToString("HH:mm:ss").Substring(4, 4) == "5:00")
             {
                 // Verificare conexiune Plc-uri, tinem in viata conexiunea cu plc-urile
-                foreach (PlcObjectModel plc in PlcService.ListaPlc)
+                foreach (PlcObjectModel plc in PlcServiceObject.ListaPlc)
                 {
                     if (!plc._client.IsConnected)
                         if (plc.IsAvailableIpAdress())
                             plc.ConnectPlc();
                 }
                 // Refresh values
-                PlcService.RefreshValuesListaPlc();
+                PlcServiceObject.RefreshValuesListaPlc();
             }
             // Se verifica daca este ora raport si se inregistreaza date in SQL, se trimite mail
             if (DateTime.Now.ToString("HH:mm:ss") == ora)
@@ -184,9 +210,9 @@ namespace Don_GasConsumtionReport
                 string filePathGaddaF2 = "";
                 string filePathGaddaF4 = "";
                 // Refresh values plc
-                PlcService.RefreshValuesListaPlc();
+                PlcServiceObject.RefreshValuesListaPlc();
 
-                foreach (PlcObjectModel plc in PlcService.ListaPlc)
+                foreach (PlcObjectModel plc in PlcServiceObject.ListaPlc)
                 {
                     // Salvare valoare index citita in varabile statice raport
                     switch (plc.PlcName)
@@ -244,7 +270,7 @@ namespace Don_GasConsumtionReport
          */
 
         // Functie trimitere mail
-        public static void TrimitereRaportMail(string adreseMailDeTrimis, string filePathDeTrimis, string subiect)
+        public void TrimitereRaportMail(string adreseMailDeTrimis, string filePathDeTrimis, string subiect)
         {
             try
             {
@@ -284,7 +310,7 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie Send Email daily with Consumption of Gas
-        public static void SendEmaildaily(string adreseMailDeTrimis, string subiectText, string bodyText)
+        public void SendEmaildaily(string adreseMailDeTrimis, string subiectText, string bodyText)
         {
             try
             {
@@ -324,7 +350,7 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie Send Email monthly with Consumption for all month
-        public static void SendEmailmonthly(string adreseMailDeTrimis, string subiectText, string bodyText,
+        public void SendEmailmonthly(string adreseMailDeTrimis, string subiectText, string bodyText,
             string filePathDeTrimisCuptor, string filePathDeTrimisGaddaF2, string filePathDeTrimisGaddaF4)
         {
             try
@@ -369,7 +395,7 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie return Json cu text varabile index si consum pentru cuptor si Gadda
-        public static string GetJsonForMail()
+        public string GetJsonForMail()
         {
             //    // Index GAz
             //public static uint IndexCuptor { get; set; } = 0;
@@ -393,7 +419,7 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie setare text body mail daily cu consum gaz
-        public static string ReturnBodyMailTextDaily(string json)
+        public string ReturnBodyMailTextDaily(string json)
         {
             var definition = new
             {
@@ -429,7 +455,7 @@ namespace Don_GasConsumtionReport
          * Functii creare folder si salvare fisiere exvcel cu consumul lunar
          */
         // Creare folder stocare fisiere consum gaz
-        public static string CreareFolderRaportare(string numePlc)
+        public string CreareFolderRaportare(string numePlc)
         {
             // Daca pui direct folderul de exp. Consum ... se salveaza in folderul radacina al proiectului
             string path = string.Format(@"c:\Consum gaz/{0}/{1}", DateTime.Now.ToString("yyyy"), numePlc);
@@ -463,7 +489,7 @@ namespace Don_GasConsumtionReport
         // Functie creare fisier excel cu consumul lunar
         // Functie exportare data to excel file and save to disk
         // returneaza FilePath
-        public static string SaveExcelFileToDisk(string dataFrom, string dataTo, string numePlc, RaportareDbContext _context)
+        public string SaveExcelFileToDisk(string dataFrom, string dataTo, string numePlc, RaportareDbContext _context)
         {
             //return Content(dataFrom + "<==>" + dataTo);
             List<IndexModel> listaSql = _context.IndexModels.ToList();
@@ -500,7 +526,7 @@ namespace Don_GasConsumtionReport
 
                 //Write the file to the disk
                 string excelName = "RaportGaz_" + numePlc + "_" + DateTime.Now.AddMonths(-1).ToString("MMMM") + ".xlsx";
-                string filePath = string.Format("{0}/{1}", Raport.CreareFolderRaportare(numePlc), excelName);
+                string filePath = string.Format("{0}/{1}", CreareFolderRaportare(numePlc), excelName);
                 FileInfo fi = new FileInfo(filePath);
                 pck.SaveAs(fi);
                 //pck.Save();
@@ -510,7 +536,7 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie daca lista PLC este goala, cream PLC-uri si le conectam
-        public static void RemakePlcConnectionWhenAvailable(string numePlc)
+        public void RemakePlcConnectionWhenAvailable(string numePlc)
         {
 
         }

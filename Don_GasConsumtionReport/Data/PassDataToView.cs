@@ -27,5 +27,6 @@ namespace Don_GasConsumtionReport
         public int TextBlockConsumCuptor { get; set; }
         public int TextBlockConsumGaddaF2 { get; set; }
         public int TextBlockConsumGaddaF4 { get; set; }
+        public int IndexInstanta { get; set; }
     }
 }

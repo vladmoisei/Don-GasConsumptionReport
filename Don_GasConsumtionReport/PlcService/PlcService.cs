@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Don_GasConsumtionReport
 {
-    public static class PlcService
+    public class PlcService
     {
-        public static int probaIncrementare;
-        public static List<PlcObjectModel> ListaPlc;
+        public int probaIncrementare;
+        public List<PlcObjectModel> ListaPlc;
 
         // Functie verificare daca exista PLC in lista in functie de nume
-        public static bool IsCreatedPlcByName(string numePlc)
+        public bool IsCreatedPlcByName(string numePlc)
         {
             if (ListaPlc.Count > 0)
             //if (ListaPlc != null)
@@ -26,7 +26,7 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie verificare daca exista PLC in lista in functie de ip
-        public static bool IsCreatedPlcByIp(string ipPlc)
+        public bool IsCreatedPlcByIp(string ipPlc)
         {
             if (ListaPlc.Count > 0)
                 //if (ListaPlc != null)
@@ -40,7 +40,7 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie GETPlcByName
-        public static PlcObjectModel GetPlcByName(string numePlc)
+        public PlcObjectModel GetPlcByName(string numePlc)
         {
             if (ListaPlc.Count > 0)
                 //if (ListaPlc != null)
@@ -54,7 +54,7 @@ namespace Don_GasConsumtionReport
         }
 
         //Functie GETPlcByIp
-        public static PlcObjectModel GetPlcByIp(string ipPlc)
+        public PlcObjectModel GetPlcByIp(string ipPlc)
         {
             if (ListaPlc.Count > 0)
                 //if (ListaPlc != null)
@@ -69,7 +69,7 @@ namespace Don_GasConsumtionReport
 
         // IP-uri PLC: "172.16.4.104" "10.0.0.11" "10.0.0.13"
         //Functie creare Plc 
-        public static void CreatePlc(string plcName, S7.Net.CpuType cpuType, string ip, short rack, short slot)
+        public void CreatePlc(string plcName, S7.Net.CpuType cpuType, string ip, short rack, short slot)
         {
             // Verificare daca daca exista plc Creat in lista
             if (IsCreatedPlcByIp(ip) || IsCreatedPlcByName(plcName)) return;
@@ -94,33 +94,33 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie stergere Plc dupa nume
-        public static void DeletePlcByName(string numePlc)
+        public void DeletePlcByName(string numePlc)
         {
             if (IsCreatedPlcByName(numePlc))
                 ListaPlc.Remove(GetPlcByName(numePlc));
         }
 
         // Functie Conectare Plc dupa nume
-        public static void ConnectPlcByName(string numePlc)
+        public void ConnectPlcByName(string numePlc)
         {
             if (IsCreatedPlcByName(numePlc)) GetPlcByName(numePlc).ConnectPlc();
         }
 
         // Functie Deconectare Plc dupa nume
-        public static void DeConnectPlcByName(string numePlc)
+        public void DeConnectPlcByName(string numePlc)
         {
             if (IsCreatedPlcByName(numePlc)) GetPlcByName(numePlc).DeconnectPlc();
         }
 
         // Functie verificare Conexiune Plc dupa nume
-        public static bool IsConnectedPlcByName(string numePlc)
+        public bool IsConnectedPlcByName(string numePlc)
         {
             if (IsCreatedPlcByName(numePlc)) return GetPlcByName(numePlc).IsConnected;
             return false;
         }
 
         // Functie Verificare Adresa IP
-        public static bool IsAvailableIpAdress(string ip)
+        public bool IsAvailableIpAdress(string ip)
         {
             Ping ping = new Ping();
             PingReply reply = ping.Send(ip, 200);
@@ -130,7 +130,7 @@ namespace Don_GasConsumtionReport
         }
 
         // Functie refresh values of plc in list
-        public static void RefreshValuesListaPlc()
+        public void RefreshValuesListaPlc()
         {
             foreach (PlcObjectModel plc in ListaPlc)
             {

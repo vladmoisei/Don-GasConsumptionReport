@@ -86,6 +86,7 @@
             url: " /Home/UpdateParameters",
             type: 'GET',
             success: function (response) {
+                //console.log('proba proba');
                 console.log("S-a realizat call functie UpdateParameters");
                 // Actualizare text IsBackgroundServiceStarted
                 textIsBackgroundServiceStarted.innerHTML = response.isStartedBackgroundService.toString();
@@ -107,7 +108,8 @@
                 BtnsPlcConnectionStatusGaddaF4(response.isConnectedPlcGaddaF4);
                 // Actualizare ultimele valori Index citite
                 console.log("Index cuptor: " + response.textBlockIndexCuptor.toString());
-                console.log("Raspuns: " +response);
+                //console.log("Raspuns: " + "Ce vreau eu");
+                //console.log("cveva ceva ceva xeva");
                 textIndexCuptorUltim.innerHTML = response.textBlockIndexCuptor.toString();
                 textIndexGaddaF2Ultim.innerHTML = response.textBlockIndexGaddaF2.toString();
                 textIndexGaddaF4Ultim.innerHTML = response.textBlockIndexGaddaF4.toString();
@@ -117,6 +119,7 @@
                 textOraDataRaportFacutCuptor.innerHTML = response.textBlockDataOraRaportFacut.toString();
                 textOraDataRaportFacutGaddaF2.innerHTML = response.textBlockDataOraRaportFacut.toString();
                 textOraDataRaportFacutGaddaF4.innerHTML = response.textBlockDataOraRaportFacut.toString();
+
                 //response.textBlockDataOraRaportFacut.toString();
 
             },

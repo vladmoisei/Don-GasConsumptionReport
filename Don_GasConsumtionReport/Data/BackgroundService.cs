@@ -11,25 +11,27 @@ namespace Don_GasConsumtionReport
 {
     public class BackgroundService : IHostedService, IDisposable
     {
-        // Lista Plc Objects
-        List<PlcObjectModel> ListaPlc;
+        // Raport 
+        public Raport Raportare;
         // Variable Scope factory, furnizor servicii
         private readonly IServiceScopeFactory _scopeFactory;
         // Variable DbContext
         private RaportareDbContext dbContext;
         // Variable Scope supply
         private IServiceScope scope;
+        // Timer
+        System.Timers.Timer _timer;
+        // Stare serviciu
+        public bool IsStartedService { get; set; } = false;
 
+        // Constructor
         public BackgroundService(IServiceScopeFactory scopeFactory, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             _scopeFactory = scopeFactory;
             // Initializare lista plc object
-            ListaPlc = new List<PlcObjectModel>();
+            if (Raportare== null) Raportare = new Raport();            
         }
-
-        System.Timers.Timer _timer;
-        public bool IsStartedService { get; set; } = false;
-
+       
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _timer = new System.Timers.Timer();
@@ -41,11 +43,9 @@ namespace Don_GasConsumtionReport
             // Start Scope service pentru a returna dbContext
             scope = _scopeFactory.CreateScope();
             // Creare dBContext din Scope
-            dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();
-            // Transfer lista plc din backgroundService in PlcService
-            PlcService.ListaPlc = ListaPlc;
+            dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();                       
 
-            PlcService.probaIncrementare = 10;
+            //PlcService.probaIncrementare = 10;
             return Task.CompletedTask;
         }
 
@@ -57,7 +57,7 @@ namespace Don_GasConsumtionReport
             //using (var scope = _scopeFactory.CreateScope())
             //{                
                 //var dbContext = scope.ServiceProvider.GetRequiredService<RaportareDbContext>();                
-                Raport.VerificareOraRaport(Raport.OraRaportCuptor, dbContext);
+                Raportare.VerificareOraRaport(Raportare.OraRaportCuptor, dbContext);
                 
                 // La data ora setata se 
                 //dbContext.Add(new IndexModel { })
@@ -84,7 +84,7 @@ namespace Don_GasConsumtionReport
             _timer.Stop();
             IsStartedService = false;
 
-            PlcService.probaIncrementare = 100;
+            //PlcService.probaIncrementare = 100;
             _timer.Dispose();
             return Task.CompletedTask;
         }

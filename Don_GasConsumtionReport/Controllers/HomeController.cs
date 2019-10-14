@@ -42,9 +42,8 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         {
             ViewBag.ServiceIsStarted = _backGroundService.IsStartedService.ToString();
             //ViewBag.Val = PlcService.probaIncrementare; proba incrementare
-            
             // La prima rulare actualizare in view ultimele elemente adaugate in SQL
-            Raport.UpdateLastElements(_context);
+            _backGroundService.Raportare.UpdateLastElements(_context);
             return View();
         }
 
@@ -56,24 +55,23 @@ using (JsonWriter writer = new JsonTextWriter(sw))
             {
                 Clock = Auxiliar.GetClock(),
                 IsStartedBackgroundService = _backGroundService.IsStartedService,
-                IsCreatedPlcCuptor = PlcService.IsCreatedPlcByName("PlcCuptor"),
-                IsConnectedPlcCuptor = PlcService.IsConnectedPlcByName("PlcCuptor"),
-                IsCreatedPlcGaddaF2 = PlcService.IsCreatedPlcByName("PlcGaddaF2"),
-                IsConnectedPlcGaddaF2 = PlcService.IsConnectedPlcByName("PlcGaddaF2"),
-                IsCreatedPlcGaddaF4 = PlcService.IsCreatedPlcByName("PlcGaddaF4"),
-                IsConnectedPlcGaddaF4 = PlcService.IsConnectedPlcByName("PlcGaddaF4"),
-                TextBoxListaMailCuptor = Raport.ListaMailCuptor,
-                TextBoxOraRaportCuptor = Raport.OraRaportCuptor,
-                TextBoxListaMailGadda = Raport.ListaMailGadda,
-                TextBoxOraRaportGadda = Raport.OraRaportGadda,
-                TextBlockIndexCuptor = Raport.IndexCuptor,
-                TextBlockIndexGaddaF2 = Raport.IndexGaddaF2,
-                TextBlockIndexGaddaF4 = Raport.IndexGaddaF4,
-                TextBlockConsumCuptor = Raport.ValoareConsumGazCuptor,
-                TextBlockConsumGaddaF2 = Raport.ValoareConsumGazGaddaF2,
-                TextBlockConsumGaddaF4 = Raport.ValoareConsumGazGaddaF4,
-                TextBlockDataOraRaportFacut = Raport.DataOraRaportFacut
-
+                IsCreatedPlcCuptor = _backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByName("PlcCuptor"),
+                IsConnectedPlcCuptor = _backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcCuptor"),
+                IsCreatedPlcGaddaF2 = _backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByName("PlcGaddaF2"),
+                IsConnectedPlcGaddaF2 = _backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF2"),
+                IsCreatedPlcGaddaF4 = _backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByName("PlcGaddaF4"),
+                IsConnectedPlcGaddaF4 = _backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF4"),
+                TextBoxListaMailCuptor = _backGroundService.Raportare.ListaMailCuptor,
+                TextBoxOraRaportCuptor = _backGroundService.Raportare.OraRaportCuptor,
+                TextBoxListaMailGadda = _backGroundService.Raportare.ListaMailGadda,
+                TextBoxOraRaportGadda = _backGroundService.Raportare.OraRaportGadda,
+                TextBlockIndexCuptor = _backGroundService.Raportare.IndexCuptor,
+                TextBlockIndexGaddaF2 = _backGroundService.Raportare.IndexGaddaF2,
+                TextBlockIndexGaddaF4 = _backGroundService.Raportare.IndexGaddaF4,
+                TextBlockConsumCuptor = _backGroundService.Raportare.ValoareConsumGazCuptor,
+                TextBlockConsumGaddaF2 = _backGroundService.Raportare.ValoareConsumGazGaddaF2,
+                TextBlockConsumGaddaF4 = _backGroundService.Raportare.ValoareConsumGazGaddaF4,
+                TextBlockDataOraRaportFacut = _backGroundService.Raportare.DataOraRaportFacut
 
             };
 
@@ -121,9 +119,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Create Plc Cuptor
         public IActionResult CreatePlcCuptor()
         {
-            if (!PlcService.IsCreatedPlcByIp("172.16.4.104"))
+            if (!_backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByIp("172.16.4.104"))
             {
-                PlcService.CreatePlc("PlcCuptor", S7.Net.CpuType.S7300, "172.16.4.104", 0, 2);
+                _backGroundService.Raportare.PlcServiceObject.CreatePlc("PlcCuptor", S7.Net.CpuType.S7300, "172.16.4.104", 0, 2);
             }
             return RedirectToAction(nameof(Index));
         }
@@ -131,9 +129,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Stergere Plc Cuptor
         public IActionResult DeletePlcCuptor()
         {
-            if (PlcService.IsCreatedPlcByIp("172.16.4.104"))
+            if (_backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByIp("172.16.4.104"))
             {
-                PlcService.DeletePlcByName("PlcCuptor");
+                _backGroundService.Raportare.PlcServiceObject.DeletePlcByName("PlcCuptor");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -141,9 +139,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Connect Plc Cuptor
         public IActionResult ConnectPlcCuptor()
         {
-            if (!PlcService.IsConnectedPlcByName("PlcCuptor"))
+            if (!_backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcCuptor"))
             {
-                PlcService.ConnectPlcByName("PlcCuptor");
+                _backGroundService.Raportare.PlcServiceObject.ConnectPlcByName("PlcCuptor");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -151,9 +149,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Deconnect Plc Cuptor
         public IActionResult DeconnectPlcCuptor()
         {
-            if (PlcService.IsConnectedPlcByName("PlcCuptor"))
+            if (_backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcCuptor"))
             {
-                PlcService.DeConnectPlcByName("PlcCuptor");
+                _backGroundService.Raportare.PlcServiceObject.DeConnectPlcByName("PlcCuptor");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -161,7 +159,7 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Check Ip Manual Plc Cuptor
         public IActionResult CheckIpPlcCuptor()
         {
-            return new JsonResult(PlcService.IsAvailableIpAdress("172.16.4.104"));
+            return new JsonResult(_backGroundService.Raportare.PlcServiceObject.IsAvailableIpAdress("172.16.4.104"));
         }
         #endregion
 
@@ -170,9 +168,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Create Plc GaddaF2
         public IActionResult CreatePlcGaddaF2()
         {
-            if (!PlcService.IsCreatedPlcByIp("10.0.0.11"))
+            if (!_backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByIp("10.0.0.11"))
             {
-                PlcService.CreatePlc("PlcGaddaF2", S7.Net.CpuType.S7300, "10.0.0.11", 0, 2);
+                _backGroundService.Raportare.PlcServiceObject.CreatePlc("PlcGaddaF2", S7.Net.CpuType.S7300, "10.0.0.11", 0, 2);
             }
             return RedirectToAction(nameof(Index));
         }
@@ -180,9 +178,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Stergere Plc GaddaF2
         public IActionResult DeletePlcGaddaF2()
         {
-            if (PlcService.IsCreatedPlcByIp("10.0.0.11"))
+            if (_backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByIp("10.0.0.11"))
             {
-                PlcService.DeletePlcByName("PlcGaddaF2");
+                _backGroundService.Raportare.PlcServiceObject.DeletePlcByName("PlcGaddaF2");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -190,9 +188,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Connect Plc GaddaF2
         public IActionResult ConnectPlcGaddaF2()
         {
-            if (!PlcService.IsConnectedPlcByName("PlcGaddaF2"))
+            if (!_backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF2"))
             {
-                PlcService.ConnectPlcByName("PlcGaddaF2");
+                _backGroundService.Raportare.PlcServiceObject.ConnectPlcByName("PlcGaddaF2");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -200,9 +198,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Deconnect Plc GaddaF2
         public IActionResult DeconnectPlcGaddaF2()
         {
-            if (PlcService.IsConnectedPlcByName("PlcGaddaF2"))
+            if (_backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF2"))
             {
-                PlcService.DeConnectPlcByName("PlcGaddaF2");
+                _backGroundService.Raportare.PlcServiceObject.DeConnectPlcByName("PlcGaddaF2");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -210,7 +208,7 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Check Ip Manual Plc GaddaF2
         public IActionResult CheckIpPlcGaddaF2()
         {
-            return new JsonResult(PlcService.IsAvailableIpAdress("10.0.0.11"));
+            return new JsonResult(_backGroundService.Raportare.PlcServiceObject.IsAvailableIpAdress("10.0.0.11"));
         }
         #endregion
 
@@ -219,9 +217,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Create Plc GaddaF4
         public IActionResult CreatePlcGaddaF4()
         {
-            if (!PlcService.IsCreatedPlcByIp("10.0.0.13"))
+            if (!_backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByIp("10.0.0.13"))
             {
-                PlcService.CreatePlc("PlcGaddaF4", S7.Net.CpuType.S7300, "10.0.0.13", 0, 2);
+                _backGroundService.Raportare.PlcServiceObject.CreatePlc("PlcGaddaF4", S7.Net.CpuType.S7300, "10.0.0.13", 0, 2);
             }
             return RedirectToAction(nameof(Index));
         }
@@ -229,9 +227,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Stergere Plc GaddaF4
         public IActionResult DeletePlcGaddaF4()
         {
-            if (PlcService.IsCreatedPlcByIp("10.0.0.13"))
+            if (_backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByIp("10.0.0.13"))
             {
-                PlcService.DeletePlcByName("PlcGaddaF4");
+                _backGroundService.Raportare.PlcServiceObject.DeletePlcByName("PlcGaddaF4");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -239,9 +237,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Connect Plc GaddaF4
         public IActionResult ConnectPlcGaddaF4()
         {
-            if (!PlcService.IsConnectedPlcByName("PlcGaddaF4"))
+            if (!_backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF4"))
             {
-                PlcService.ConnectPlcByName("PlcGaddaF4");
+                _backGroundService.Raportare.PlcServiceObject.ConnectPlcByName("PlcGaddaF4");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -249,9 +247,9 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Deconnect Plc GaddaF4
         public IActionResult DeconnectPlcGaddaF4()
         {
-            if (PlcService.IsConnectedPlcByName("PlcGaddaF4"))
+            if (_backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF4"))
             {
-                PlcService.DeConnectPlcByName("PlcGaddaF4");
+                _backGroundService.Raportare.PlcServiceObject.DeConnectPlcByName("PlcGaddaF4");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -259,7 +257,7 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Check Ip Manual Plc GaddaF4
         public IActionResult CheckIpPlcGaddaF4()
         {
-            return new JsonResult(PlcService.IsAvailableIpAdress("10.0.0.13"));
+            return new JsonResult(_backGroundService.Raportare.PlcServiceObject.IsAvailableIpAdress("10.0.0.13"));
         }
         #endregion
 
@@ -267,28 +265,28 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         // Set Lista mail si ora raport Plc Cuptor
         public IActionResult SetListaMailOraRaportPlcCuptor(string listaMail, string oraRaport)
         {
-            Raport.ListaMailCuptor = listaMail;
-            Raport.OraRaportCuptor = oraRaport;
+            _backGroundService.Raportare.ListaMailCuptor = listaMail;
+            _backGroundService.Raportare.OraRaportCuptor = oraRaport;
             //return RedirectToAction(nameof(Index));
-            return new JsonResult(new { Lista = Raport.ListaMailCuptor, Ora = Raport.OraRaportCuptor });
+            return new JsonResult(new { Lista = _backGroundService.Raportare.ListaMailCuptor, Ora = _backGroundService.Raportare.OraRaportCuptor });
         }
         // Show Lista mail si ora raport Plc Cuptor
         public IActionResult ShowListaMailOraRaportPlcCuptor()
         {
-            return new JsonResult(new { Lista = Raport.ListaMailCuptor, Ora = Raport.OraRaportCuptor });
+            return new JsonResult(new { Lista = _backGroundService.Raportare.ListaMailCuptor, Ora = _backGroundService.Raportare.OraRaportCuptor });
         }
         // Set Lista mail si ora raport Plc Gadda
         public IActionResult SetListaMailOraRaportPlcGadda(string listaMail, string oraRaport)
         {
-            Raport.ListaMailGadda = listaMail;
-            Raport.OraRaportGadda = oraRaport;
+            _backGroundService.Raportare.ListaMailGadda = listaMail;
+            _backGroundService.Raportare.OraRaportGadda = oraRaport;
             //return RedirectToAction(nameof(Index));
-            return new JsonResult(new { Lista = Raport.ListaMailGadda, Ora = Raport.OraRaportGadda });
+            return new JsonResult(new { Lista = _backGroundService.Raportare.ListaMailGadda, Ora = _backGroundService.Raportare.OraRaportGadda });
         }
         // Show Lista mail si ora raport Plc Gadda
         public IActionResult ShowListaMailOraRaportPlcGadda()
         {
-            return new JsonResult(new { Lista = Raport.ListaMailGadda, Ora = Raport.OraRaportGadda });
+            return new JsonResult(new { Lista = _backGroundService.Raportare.ListaMailGadda, Ora = _backGroundService.Raportare.OraRaportGadda });
         }
         #endregion
 
