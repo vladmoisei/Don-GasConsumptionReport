@@ -20,43 +20,64 @@
 
     <section id="plcService">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <h2>Plc CuptorIP :172.16.4.104</h2>
                 @* - Avem clasa btn-default in conditii normale
                     - Daca este creat Plc-ul Butonul Create are clasa btn-succes si Butonul Delete are clasa btn-danger
                     - La fel si pentru cele de conectare/ deconectare Plc *@
-                <div id="btnCreatePlcCuptor" class="col-md-6 btn btn-default">Create Plc CuptorPc6</div>
-                <div id="btnDeletePlcCuptor" class="col-md-6 btn btn-default">Delete Plc CuptorPc6</div>
-                <div id="btnConnectPlcCuptor" class="col-md-6 btn btn-success">Connect Plc CuptorPc6</div>
-                <div id="btnDeconnectPlcCuptor" class="col-md-6 btn btn-danger">Deconnect Plc CuptorPc6</div>
-                <div id="btnCheckIpPlcCuptor" class="col-md-6 btn btn-info">CheckIp Plc Cuptor</div>
-
+                <div id="btnCreatePlcCuptor" class="col-md-6 btn btn-default">Create Cuptor</div>
+                <div id="btnDeletePlcCuptor" class="col-md-6 btn btn-default">Delete Cuptor</div>
+                <div id="btnConnectPlcCuptor" class="col-md-6 btn btn-success">Connect Cuptor</div>
+                <div id="btnDeconnectPlcCuptor" class="col-md-6 btn btn-danger">Deconnect Cuptor</div>
+                <div id="btnCheckIpPlcCuptor" class="col-md-12 btn btn-info">CheckIp Cuptor</div>
+                <p>Ultimul index citit: <strong><span id="textIndexCuptorUltim">000</span></strong></p>
+                <p>Ultimul consum gaz: <strong><span id="textConsumCuptorUltim">123</span></strong></p>
+                <p>Ora Raport efectuat: <strong><span id="textOraDataRaportFacutCuptor">123</span></strong></p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <h2>Plc GaddaF2 IP: 10.0.0.11</h2>
                 @* - Avem clasa btn-default in conditii normale
                     - Daca este creat Plc-ul Butonul Create are clasa btn-succes si Butonul Delete are clasa btn-danger
                     - La fel si pentru cele de conectare/ deconectare Plc *@
-                <div id="btnCreatePlcGaddaF2" class="col-md-6 btn btn-default">Create PlcGaddaF2</div>
-                <div id="btnDeletePlcGaddaF2" class="col-md-6 btn btn-default">Delete PlcGaddaF2</div>
-                <div id="btnConnectPlcGaddaF2" class="col-md-6 btn btn-success">Connect PlcGaddaF2</div>
-                <div id="btnDeconnectPlcGaddaF2" class="col-md-6 btn btn-danger">Deconnect PlcGaddaF2</div>
-                <div id="btnCheckIpPlcGaddaF2" class="col-md-6 btn btn-info">CheckIp PlcGaddaF2</div>
+                <div id="btnCreatePlcGaddaF2" class="col-md-6 btn btn-default">Create F2</div>
+                <div id="btnDeletePlcGaddaF2" class="col-md-6 btn btn-default">Delete F2</div>
+                <div id="btnConnectPlcGaddaF2" class="col-md-6 btn btn-success">Connect F2</div>
+                <div id="btnDeconnectPlcGaddaF2" class="col-md-6 btn btn-danger">Deconnect F2</div>
+                <div id="btnCheckIpPlcGaddaF2" class="col-md-12 btn btn-info">CheckIp GaddaF2</div>
+                <p>Ultimul index citit GaddaF2: <strong><span id="textIndexGaddaF2Ultim">000</span></strong></p>
+                <p>Ultimul consum gaz GaddaF2: <strong><span id="textConsumGaddaF2Ultim">123</span></strong></p>
+                <p>Ora Raport efectuat: <strong><span id="textOraDataRaportFacutGaddaF2">123</span></strong></p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <h2>Plc GaddaF4 IP: 10.0.0.13</h2>
                 @* - Avem clasa btn-default in conditii normale
                     - Daca este creat Plc-ul Butonul Create are clasa btn-succes si Butonul Delete are clasa btn-danger
                     - La fel si pentru cele de conectare/ deconectare Plc *@
-                <div id="btnCreatePlcGaddaF4" class="col-md-6 btn btn-default">Create PlcGaddaF4</div>
-                <div id="btnDeletePlcGaddaF4" class="col-md-6 btn btn-default">Delete PlcGaddaF4</div>
-                <div id="btnConnectPlcGaddaF4" class="col-md-6 btn btn-success">Connect PlcGaddaF4</div>
-                <div id="btnDeconnectPlcGaddaF4" class="col-md-6 btn btn-danger">Deconnect PlcGaddaF4</div>
-                <div id="btnCheckIpPlcGaddaF4" class="col-md-6 btn btn-info">CheckIp PlcGaddaF4</div>
+                <div id="btnCreatePlcGaddaF4" class="col-md-6 btn btn-default">Create F4</div>
+                <div id="btnDeletePlcGaddaF4" class="col-md-6 btn btn-default">Delete F4</div>
+                <div id="btnConnectPlcGaddaF4" class="col-md-6 btn btn-success">Connect F4</div>
+                <div id="btnDeconnectPlcGaddaF4" class="col-md-6 btn btn-danger">Deconnect F4</div>
+                <div id="btnCheckIpPlcGaddaF4" class="col-md-12 btn btn-info">CheckIp GaddaF4</div>
+                <p>Ultimul index citit GaddaF4: <strong><span id="textIndexGaddaF4Ultim">F4000</span></strong></p>
+                <p>Ultimul consum gaz GaddaF4: <strong><span id="textConsumGaddaF4Ultim">F4123</span></strong></p>
+                <p>Ora Raport efectuat: <strong><span id="textOraDataRaportFacutGaddaF4">123</span></strong></p>
+            </div>
+            <div class="col-md-3">
+                <h2>Plc Elti IP: 172.16.4.70</h2>
+                @* - Avem clasa btn-default in conditii normale
+                    - Daca este creat Plc-ul Butonul Create are clasa btn-succes si Butonul Delete are clasa btn-danger
+                    - La fel si pentru cele de conectare/ deconectare Plc *@
+                <div id="btnCreatePlcElti" class="col-md-6 btn btn-default">Create Elti</div>
+                <div id="btnDeletePlcElti" class="col-md-6 btn btn-default">Delete Elti</div>
+                <div id="btnConnectPlcElti" class="col-md-6 btn btn-success">Connect Elti</div>
+                <div id="btnDeconnectPlcElti" class="col-md-6 btn btn-danger">Deconnect Elti</div>
+                <div id="btnCheckIpPlcElti" class="col-md-12 btn btn-info">CheckIp Elti</div>
+                <p>Ultimul index citit Elti: <strong><span id="textIndexEltiUltim">F4000</span></strong></p>
+                <p>Ultimul consum gaz Elti: <strong><span id="textConsumEltiUltim">F4123</span></strong></p>
+                <p>Ora Raport efectuat: <strong><span id="textOraDataRaportFacutElti">123</span></strong></p>
             </div>
         </div>
         <div class="row">
-
         </div>
     </section>
     <section id="cuptorPropulsie">
@@ -76,9 +97,6 @@
                     <input class="" type="text" id="textBoxOraRaportCuptor" />
                 </div>
             </div>
-            <p>Ultimul index citit: <strong><span id="textIndexCuptorUltim">000</span></strong></p>
-            <p>Ultimul consum gaz inregistrat: <strong><span id="textConsumCuptorUltim">123</span></strong></p>
-            <p>Ora Raport efectuat: <strong><span id="textOraDataRaportFacutCuptor">123</span></strong></p>
         </div>
     </section>
 
@@ -99,27 +117,16 @@
                     <input class="" type="text" id="textBoxOraRaportGadda" />
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <p>Ultimul index citit GaddaF2: <strong><span id="textIndexGaddaF2Ultim">000</span></strong></p>
-                    <p>Ultimul consum gaz inregistrat GaddaF2: <strong><span id="textConsumGaddaF2Ultim">123</span></strong></p>
-                    <p>Ora Raport efectuat: <strong><span id="textOraDataRaportFacutGaddaF2">123</span></strong></p>
-                </div>
-                <div class="col-md-6">
-                    <p>Ultimul index citit GaddaF4: <strong><span id="textIndexGaddaF4Ultim">F4000</span></strong></p>
-                    <p>Ultimul consum gaz inregistrat GaddaF4: <strong><span id="textConsumGaddaF4Ultim">F4123</span></strong></p>
-                    <p>Ora Raport efectuat: <strong><span id="textOraDataRaportFacutGaddaF4">123</span></strong></p>
-                </div>
-            </div>
+
         </div>
     </section>
-    
+
 </div>
 
 @*<p>
-    Valoare Incrementata: @ViewBag.Val
-</p>*@
+        Valoare Incrementata: @ViewBag.Val
+    </p>*@
 
 @section PlcService {
-<script src="~/js/PlcService.js"></script>
+    <script src="~/js/PlcService.js"></script>
 }

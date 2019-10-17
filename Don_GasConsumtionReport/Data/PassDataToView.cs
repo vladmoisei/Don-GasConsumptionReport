@@ -16,6 +16,8 @@ namespace Don_GasConsumtionReport
         public bool IsConnectedPlcGaddaF2 { get; set; }
         public bool IsCreatedPlcGaddaF4 { get; set; }
         public bool IsConnectedPlcGaddaF4 { get; set; }
+        public bool IsCreatedPlcElti { get; set; }
+        public bool IsConnectedPlcElti { get; set; }
         public string TextBoxListaMailCuptor { get; set; }
         public string TextBoxOraRaportCuptor { get; set; }
         public string TextBoxListaMailGadda { get; set; }
@@ -23,10 +25,12 @@ namespace Don_GasConsumtionReport
         public uint TextBlockIndexCuptor { get; set; }
         public uint TextBlockIndexGaddaF2 { get; set; }
         public uint TextBlockIndexGaddaF4 { get; set; }
+        public uint TextBlockIndexElti { get; set; }
         public string TextBlockDataOraRaportFacut { get; set; }
         public int TextBlockConsumCuptor { get; set; }
         public int TextBlockConsumGaddaF2 { get; set; }
         public int TextBlockConsumGaddaF4 { get; set; }
+        public int TextBlockConsumElti { get; set; }
         public int IndexInstanta { get; set; }
     }
 }

@@ -67,7 +67,7 @@ namespace Don_GasConsumtionReport
             return null;
         }
 
-        // IP-uri PLC: "172.16.4.104" "10.0.0.11" "10.0.0.13"
+        // IP-uri PLC: "172.16.4.104" "10.0.0.11" "10.0.0.13" "172.16.4.70"
         //Functie creare Plc 
         public void CreatePlc(string plcName, S7.Net.CpuType cpuType, string ip, short rack, short slot)
         {
@@ -87,6 +87,9 @@ namespace Don_GasConsumtionReport
                     break;
                 case "PlcGaddaF4":
                     plc.AdresaIndexGaz = "DB10.DBD46"; //Dint
+                    break;
+                case "PlcElti":
+                    plc.AdresaIndexGaz = "MD34"; //Dint
                     break;
                 default:
                     break;

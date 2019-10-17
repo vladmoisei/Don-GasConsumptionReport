@@ -28,11 +28,12 @@ namespace Don_GasConsumtionReport
         public uint IndexCuptor { get; set; }
         public uint IndexGaddaF2 { get; set; }
         public uint IndexGaddaF4 { get; set; }
-
+        public uint IndexElti { get; set; }
         // Valori consum gaz
         public int ValoareConsumGazCuptor { get; set; }
         public int ValoareConsumGazGaddaF2 { get; set; }
         public int ValoareConsumGazGaddaF4 { get; set; }
+        public int ValoareConsumGazElti { get; set; }
         // TO DO
 
 
@@ -53,10 +54,11 @@ namespace Don_GasConsumtionReport
             IndexCuptor = 0;
             IndexGaddaF2 = 0;
             IndexGaddaF4 = 0;
+            IndexElti = 0;
             ValoareConsumGazCuptor = 0;
             ValoareConsumGazGaddaF2 = 0;
             ValoareConsumGazGaddaF4 = 0;
-
+            ValoareConsumGazElti = 0;
         }
         /*
          * Functii inregistrare date (index, consum) in SQL Server
@@ -86,6 +88,10 @@ namespace Don_GasConsumtionReport
                 case "PlcGaddaF4":
                     if (IndexGaddaF4 != 0) ValoareConsumGazGaddaF4 = (int)indexModel.IndexValue - (int)IndexGaddaF4;
                     indexModel.GazValue = ValoareConsumGazGaddaF4;
+                    break;
+                case "PlcElti":
+                    if (IndexElti != 0) ValoareConsumGazElti = (int)indexModel.IndexValue - (int)IndexElti;
+                    indexModel.GazValue = ValoareConsumGazElti;
                     break;
                 default:
                     break;
@@ -127,6 +133,12 @@ namespace Don_GasConsumtionReport
                         return context.IndexModels.ToList().Where(model => model.PlcName == "PlcGaddaF4").LastOrDefault();
                     }
                     break;
+                case "PlcElti":
+                    if (IndexElti== 0)
+                    {
+                        return context.IndexModels.ToList().Where(model => model.PlcName == "PlcElti").LastOrDefault();
+                    }
+                    break;
                 default:
                     break;
 
@@ -160,6 +172,13 @@ namespace Don_GasConsumtionReport
                     IndexGaddaF4 = (uint)lastElementGaddaF4.IndexValue;
                     ValoareConsumGazGaddaF4 = lastElementGaddaF4.GazValue;
                     DataOraRaportFacut = lastElementGaddaF4.Data;
+                }
+                if (IndexElti == 0)
+                {
+                    IndexModel lastElementElti = GetLastElementFromSql("PlcElti", context);
+                    IndexElti = (uint)lastElementElti.IndexValue;
+                    ValoareConsumGazElti = lastElementElti.GazValue;
+                    DataOraRaportFacut = lastElementElti.Data;
                 }
             }
             catch (NullReferenceException ex)
@@ -209,6 +228,7 @@ namespace Don_GasConsumtionReport
                 string filePathCuptor = "";
                 string filePathGaddaF2 = "";
                 string filePathGaddaF4 = "";
+                string filePathElti = "";
                 // Refresh values plc
                 PlcServiceObject.RefreshValuesListaPlc();
 
@@ -235,13 +255,19 @@ namespace Don_GasConsumtionReport
                                                                 // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
                             filePathGaddaF4 = SaveExcelFilesForLastMonth(plc.PlcName, context);
                             break;
+                        case "PlcElti":
+                            AddToSqlIndex(context, GetIndexModelObject(plc.PlcName, plc.ValoareIndexGaz));
+                            IndexElti = plc.ValoareIndexGaz; //Dint
+                                                                // Creare Fisier excel cu consumul pe luna precedenta pe 1 a lunii
+                            filePathElti = SaveExcelFilesForLastMonth(plc.PlcName, context);
+                            break;
                         default:
                             break;
                     }
                 }
 
                 // Trimitere mail
-                string subiectTextMailDaily = String.Format("Consum gaz Cuptor, Gadda pe data: {0}",
+                string subiectTextMailDaily = String.Format("Consum gaz pe data: {0}",
                     DateTime.Now.ToString("dd MMMM, yyyy"));
                 string bodyTextMailDaily = ReturnBodyMailTextDaily(GetJsonForMail());
                 SendEmaildaily(ListaMailCuptor, subiectTextMailDaily, bodyTextMailDaily); // functie trimitere mail zilnic
@@ -249,14 +275,14 @@ namespace Don_GasConsumtionReport
                 // Functie trimitere mail lunar cu consumul inregistrat pe toata luna pe dat ade 1 a lunii
                 if (IsFirstDayOfMonth())
                 {
-                    string subiectTextMailMonthly = String.Format("Consum gaz Cuptor, Gadda F2 si F4 pe luna: {0}",
+                    string subiectTextMailMonthly = String.Format("Consum gaz pe luna: {0}",
                         DateTime.Now.AddMonths(-1).ToString("MMMM, yyyy"));
                     string bodyTextMailMonthly = string.Format("Buna dimineata. <br><br>Atasat gasiti consumul de gaz " +
-                        "inregistrat de contor gaz cuptor cu propuslie, Gadda F2 si F4 pe luna {0}. <br><br>O zi buna.",
+                        "pe luna {0}. <br><br>O zi buna.",
                     DateTime.Now.AddMonths(-1).ToString("MMMM, yyyy"));
                     // Functie trimitere mail lunar
                     SendEmailmonthly(ListaMailGadda, subiectTextMailMonthly, bodyTextMailMonthly, filePathCuptor,
-                        filePathGaddaF2, filePathGaddaF4);
+                        filePathGaddaF2, filePathGaddaF4, filePathElti);
                 }
                 System.Threading.Thread.Sleep(1000);
                 return true;
@@ -351,7 +377,7 @@ namespace Don_GasConsumtionReport
 
         // Functie Send Email monthly with Consumption for all month
         public void SendEmailmonthly(string adreseMailDeTrimis, string subiectText, string bodyText,
-            string filePathDeTrimisCuptor, string filePathDeTrimisGaddaF2, string filePathDeTrimisGaddaF4)
+            string filePathDeTrimisCuptor, string filePathDeTrimisGaddaF2, string filePathDeTrimisGaddaF4, string filePathDeTrimisElti)
         {
             try
             {
@@ -367,11 +393,13 @@ namespace Don_GasConsumtionReport
                 mail.IsBodyHtml = true;
                 using (Attachment attachmentCuptor = new Attachment(filePathDeTrimisCuptor),
                     attachmentGaddaF2 = new Attachment(filePathDeTrimisGaddaF2),
-                    attachmentGaddaF4 = new Attachment(filePathDeTrimisGaddaF4))
+                    attachmentGaddaF4 = new Attachment(filePathDeTrimisGaddaF4),
+                    attachmentElti = new Attachment(filePathDeTrimisElti))
                 {
                     mail.Attachments.Add(attachmentCuptor);
                     mail.Attachments.Add(attachmentGaddaF2);
                     mail.Attachments.Add(attachmentGaddaF4);
+                    mail.Attachments.Add(attachmentElti);
 
                     SmtpClient smtp = new SmtpClient();
                     smtp.Host = "smtp.gmail.com"; //Or Your SMTP Server Address
@@ -411,9 +439,11 @@ namespace Don_GasConsumtionReport
                 indexCuptor = IndexCuptor,
                 indexGaddaF2 = IndexGaddaF2,
                 indexGaddaF4 = IndexGaddaF4,
+                indexElti = IndexElti,
                 valoareConsumGazCuptor = ValoareConsumGazCuptor,
                 valoareConsumGazGaddaF2 = ValoareConsumGazGaddaF2,
-                valoareConsumGazGaddaF4 = ValoareConsumGazGaddaF4
+                valoareConsumGazGaddaF4 = ValoareConsumGazGaddaF4,
+                valoareConsumGazElti = ValoareConsumGazElti
             });
             return json;
         }
@@ -426,28 +456,34 @@ namespace Don_GasConsumtionReport
                 indexCuptor = 0,
                 indexGaddaF2 = 0,
                 indexGaddaF4 = 0,
+                indexElti = 0,
                 valoareConsumGazCuptor = 0,
                 valoareConsumGazGaddaF2 = 0,
-                valoareConsumGazGaddaF4 = 0
+                valoareConsumGazGaddaF4 = 0,
+                valoareConsumGazElti = 0
             };
 
             var jsonResult = JsonConvert.DeserializeAnonymousType(json, definition);
 
-            string Body = string.Format("Buna dimineata. <br>Atasat gasiti indexul cat si consumul de gaz pentru: " +
-                "cuptor cu propuslie, Gadda cuptor F2, Gadda cuptor F4:<br>" +
+            string Body = string.Format("Buna dimineata. <br>Atasat gasiti indexul cat si consumul de gaz: " +
+                "<br>" +
                 "<br>Index Cuptor: {0}" +
                 "<br>Index GaddaF2: {1}" +
-                "<br>Index GaddaF4: {2}<br>" +
-                "<br>Consum Cuptor: <strong>{3}</strong>" +
-                "<br>Consum GaddaF2: <strong>{4}</strong>" +
-                "<br>Consum GaddaF4: <strong>{5}</strong><br>" +
+                "<br>Index GaddaF4: {2}" +
+                "<br>Index Elti: {3}<br>" +
+                "<br>Consum Cuptor: <strong>{4}</strong>" +
+                "<br>Consum GaddaF2: <strong>{5}</strong>" +
+                "<br>Consum GaddaF4: <strong>{6}</strong>" +
+                "<br>Consum Elti: <strong>{7}</strong><br>" +
                 "<br>O zi buna.",
                 jsonResult.indexCuptor,
                 jsonResult.indexGaddaF2,
                 jsonResult.indexGaddaF4,
+                jsonResult.indexElti,
                 jsonResult.valoareConsumGazCuptor,
                 jsonResult.valoareConsumGazGaddaF2,
-                jsonResult.valoareConsumGazGaddaF4);
+                jsonResult.valoareConsumGazGaddaF4,
+                jsonResult.valoareConsumGazElti);
             return Body;
         }
 

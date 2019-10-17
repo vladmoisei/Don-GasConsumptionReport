@@ -50,7 +50,8 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         #region View Index UpdateParameters - refresh automatically
         // Actiune returnare parametri in Index View pentru actualizare 
         public IActionResult UpdateParameters()
-        {
+        {          
+            // Format Json with data for Update Index page
             PassDataToView dataToPass = new PassDataToView
             {
                 Clock = Auxiliar.GetClock(),
@@ -61,6 +62,8 @@ using (JsonWriter writer = new JsonTextWriter(sw))
                 IsConnectedPlcGaddaF2 = _backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF2"),
                 IsCreatedPlcGaddaF4 = _backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByName("PlcGaddaF4"),
                 IsConnectedPlcGaddaF4 = _backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF4"),
+                IsCreatedPlcElti = _backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByName("PlcElti"),
+                IsConnectedPlcElti = _backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcElti"),
                 TextBoxListaMailCuptor = _backGroundService.Raportare.ListaMailCuptor,
                 TextBoxOraRaportCuptor = _backGroundService.Raportare.OraRaportCuptor,
                 TextBoxListaMailGadda = _backGroundService.Raportare.ListaMailGadda,
@@ -68,9 +71,11 @@ using (JsonWriter writer = new JsonTextWriter(sw))
                 TextBlockIndexCuptor = _backGroundService.Raportare.IndexCuptor,
                 TextBlockIndexGaddaF2 = _backGroundService.Raportare.IndexGaddaF2,
                 TextBlockIndexGaddaF4 = _backGroundService.Raportare.IndexGaddaF4,
+                TextBlockIndexElti = _backGroundService.Raportare.IndexElti,
                 TextBlockConsumCuptor = _backGroundService.Raportare.ValoareConsumGazCuptor,
                 TextBlockConsumGaddaF2 = _backGroundService.Raportare.ValoareConsumGazGaddaF2,
                 TextBlockConsumGaddaF4 = _backGroundService.Raportare.ValoareConsumGazGaddaF4,
+                TextBlockConsumElti = _backGroundService.Raportare.ValoareConsumGazElti,
                 TextBlockDataOraRaportFacut = _backGroundService.Raportare.DataOraRaportFacut
 
             };
@@ -82,16 +87,6 @@ using (JsonWriter writer = new JsonTextWriter(sw))
             //return new JsonResult(Auxiliar.GetClock());
         }
         #endregion
-
-        public IActionResult CuptorPropulsie()
-        {
-            return View();
-        }
-
-        public IActionResult CuptorGadda()
-        {
-            return View();
-        }
 
         #region View Index: Comenzi butoane BackgroundService
         // COMENZI BUTOANE INDEX
@@ -261,12 +256,68 @@ using (JsonWriter writer = new JsonTextWriter(sw))
         }
         #endregion
 
+        #region View Index: Comenzi butoane Plc Elti
+        // COMENZI PLC Elti
+        // Create Plc Elti
+        public IActionResult CreatePlcElti()
+        {
+            if (!_backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByIp("172.16.4.70"))
+            {
+                _backGroundService.Raportare.PlcServiceObject.CreatePlc("PlcElti", S7.Net.CpuType.S7300, "172.16.4.70", 0, 2);
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Stergere Plc Elti
+        public IActionResult DeletePlcElti()
+        {
+            if (_backGroundService.Raportare.PlcServiceObject.IsCreatedPlcByIp("172.16.4.70"))
+            {
+                _backGroundService.Raportare.PlcServiceObject.DeletePlcByName("PlcElti");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Connect Plc Elti
+        public IActionResult ConnectPlcElti()
+        {
+            if (!_backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcElti"))
+            {
+                _backGroundService.Raportare.PlcServiceObject.ConnectPlcByName("PlcElti");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Deconnect Plc Elti
+        public IActionResult DeconnectPlcElti()
+        {
+            if (_backGroundService.Raportare.PlcServiceObject.IsConnectedPlcByName("PlcElti"))
+            {
+                _backGroundService.Raportare.PlcServiceObject.DeConnectPlcByName("PlcElti");
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Check Ip Manual Plc Elti
+        public IActionResult CheckIpPlcElti()
+        {
+            return new JsonResult(_backGroundService.Raportare.PlcServiceObject.IsAvailableIpAdress("172.16.4.70"));
+        }
+        #endregion
+
         #region View Index: Setare ListaMail si oraRaport; index si consum Cuptor & Gadda
         // Set Lista mail si ora raport Plc Cuptor
         public IActionResult SetListaMailOraRaportPlcCuptor(string listaMail, string oraRaport)
         {
-            _backGroundService.Raportare.ListaMailCuptor = listaMail;
-            _backGroundService.Raportare.OraRaportCuptor = oraRaport;
+            // Actualizare trimitere mail
+            // Scriere in variabila globala din _backgroundservice pt a nu se sterge cu Report
+            _backGroundService.ListaTrimitereMail = listaMail;
+            _backGroundService.Raportare.ListaMailCuptor = _backGroundService.ListaTrimitereMail;
+            //_backGroundService.Raportare.ListaMailCuptor = listaMail;
+            //_backGroundService.Raportare.OraRaportCuptor = oraRaport;
+            _backGroundService.OraTrimitereMail = oraRaport;
+            _backGroundService.Raportare.OraRaportCuptor = _backGroundService.OraTrimitereMail;
+
             //return RedirectToAction(nameof(Index));
             return new JsonResult(new { Lista = _backGroundService.Raportare.ListaMailCuptor, Ora = _backGroundService.Raportare.OraRaportCuptor });
         }

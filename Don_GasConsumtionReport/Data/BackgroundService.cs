@@ -23,15 +23,64 @@ namespace Don_GasConsumtionReport
         System.Timers.Timer _timer;
         // Stare serviciu
         public bool IsStartedService { get; set; } = false;
+        // Lista mail
+        public string ListaTrimitereMail { get; set; } = "v.moisei@beltrame-group.com";
+        // Ora Raportare
+        public string OraTrimitereMail { get; set; } = "06:59:00";
 
         // Constructor
         public BackgroundService(IServiceScopeFactory scopeFactory, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             _scopeFactory = scopeFactory;
             // Initializare lista plc object
-            if (Raportare== null) Raportare = new Raport();            
+            if (Raportare== null) Raportare = new Raport();
+            // Actualizare trimitere mail
+            Raportare.ListaMailCuptor = ListaTrimitereMail;
+            Raportare.OraRaportCuptor = OraTrimitereMail;
+
+            // Cream si conectam PLC-uri 
+            // Plc Cuptor
+            if (!Raportare.PlcServiceObject.IsCreatedPlcByIp("172.16.4.104"))
+            {
+                Raportare.PlcServiceObject.CreatePlc("PlcCuptor", S7.Net.CpuType.S7300, "172.16.4.104", 0, 2);
+            }
+
+            if (!Raportare.PlcServiceObject.IsConnectedPlcByName("PlcCuptor"))
+            {
+                Raportare.PlcServiceObject.ConnectPlcByName("PlcCuptor");
+            }
+
+            // Plc GaddaF2
+            if (!Raportare.PlcServiceObject.IsCreatedPlcByIp("10.0.0.11"))
+            {
+                Raportare.PlcServiceObject.CreatePlc("PlcGaddaF2", S7.Net.CpuType.S7300, "10.0.0.11", 0, 2);
+            }
+            if (!Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF2"))
+            {
+                Raportare.PlcServiceObject.ConnectPlcByName("PlcGaddaF2");
+            }
+
+            // Plc GaddaF4
+            if (!Raportare.PlcServiceObject.IsCreatedPlcByIp("10.0.0.13"))
+            {
+                Raportare.PlcServiceObject.CreatePlc("PlcGaddaF4", S7.Net.CpuType.S7300, "10.0.0.13", 0, 2);
+            }
+            if (!Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF4"))
+            {
+                Raportare.PlcServiceObject.ConnectPlcByName("PlcGaddaF4");
+            }
+
+            // Plc Elti
+            if (!Raportare.PlcServiceObject.IsCreatedPlcByIp("172.16.4.70"))
+            {
+                Raportare.PlcServiceObject.CreatePlc("PlcElti", S7.Net.CpuType.S7300, "172.16.4.70", 0, 2);
+            }
+            if (!Raportare.PlcServiceObject.IsConnectedPlcByName("PlcElti"))
+            {
+                Raportare.PlcServiceObject.ConnectPlcByName("PlcElti");
+            }
         }
-       
+
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _timer = new System.Timers.Timer();
@@ -75,17 +124,56 @@ namespace Don_GasConsumtionReport
                 throw;
             }
             _timer.Start();
-
-
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _timer.Stop();
             IsStartedService = false;
-
             //PlcService.probaIncrementare = 100;
             _timer.Dispose();
+
+            // Deconectare si stergere Plc
+
+            // Plc Cuptor
+            if (Raportare.PlcServiceObject.IsConnectedPlcByName("PlcCuptor"))
+            {
+                Raportare.PlcServiceObject.DeConnectPlcByName("PlcCuptor");
+            }
+            if (Raportare.PlcServiceObject.IsCreatedPlcByIp("172.16.4.104"))
+            {
+                Raportare.PlcServiceObject.DeletePlcByName("PlcCuptor");
+            }
+
+            // Plc GaddaF2
+            if (Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF2"))
+            {
+                Raportare.PlcServiceObject.DeConnectPlcByName("PlcGaddaF2");
+            }
+            if (Raportare.PlcServiceObject.IsCreatedPlcByIp("10.0.0.11"))
+            {
+                Raportare.PlcServiceObject.DeletePlcByName("PlcGaddaF2");
+            }
+
+            // Plc GadaF4
+            if (Raportare.PlcServiceObject.IsConnectedPlcByName("PlcGaddaF4"))
+            {
+                Raportare.PlcServiceObject.DeConnectPlcByName("PlcGaddaF4");
+            }
+            if (Raportare.PlcServiceObject.IsCreatedPlcByIp("10.0.0.13"))
+            {
+                Raportare.PlcServiceObject.DeletePlcByName("PlcGaddaF4");
+            }
+
+            // Plc Elti
+            if (Raportare.PlcServiceObject.IsConnectedPlcByName("PlcElti"))
+            {
+                Raportare.PlcServiceObject.DeConnectPlcByName("PlcElti");
+            }
+            if (Raportare.PlcServiceObject.IsCreatedPlcByIp("172.16.4.70"))
+            {
+                Raportare.PlcServiceObject.DeletePlcByName("PlcElti");
+            }
             return Task.CompletedTask;
         }
 

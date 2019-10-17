@@ -47,6 +47,18 @@
     // Buton Check connection Plc Gadda F4
     let btnCheckIpPlcGaddaF4 = document.getElementById("btnCheckIpPlcGaddaF4");
 
+    //// Variabile comenzi Plc Elti
+    // Buton Create Plc Elti
+    let btnCreatePlcElti = document.getElementById("btnCreatePlcElti");
+    // Buton Delete Plc Elti
+    let btnDeletePlcElti = document.getElementById("btnDeletePlcElti");
+    // Buton Connect Plc Elti
+    let btnConnectPlcElti = document.getElementById("btnConnectPlcElti");
+    // Buton Deconnect Plc Elti
+    let btnDeconnectPlcElti = document.getElementById("btnDeconnectPlcElti");
+    // Buton Check connection Plc Elti
+    let btnCheckIpPlcElti = document.getElementById("btnCheckIpPlcElti");
+
     //// Variabile comenzi Setare lista mail si ora raportare Cuptor    
     // Buton comanda setare
     let btnSetareMailCuptor = document.getElementById("btnSetareMailCuptor");
@@ -70,6 +82,9 @@
     let textOraDataRaportFacutGaddaF2 = document.getElementById("textOraDataRaportFacutGaddaF2");
     // Text Block Data Ora Raport Efectuat
     let textOraDataRaportFacutGaddaF4 = document.getElementById("textOraDataRaportFacutGaddaF4");
+    // Text Block Data Ora Raport Efectuat Elti (e acelasi peste tot)
+    let textOraDataRaportFacutElti = document.getElementById("textOraDataRaportFacutElti");
+
     //// Variabile Index si consum cuptor & Gadda
     let textIndexCuptorUltim = document.getElementById("textIndexCuptorUltim");
     let textConsumCuptorUltim = document.getElementById("textConsumCuptorUltim");
@@ -77,7 +92,8 @@
     let textConsumGaddaF2Ultim = document.getElementById("textConsumGaddaF2Ultim");
     let textIndexGaddaF4Ultim = document.getElementById("textIndexGaddaF4Ultim");
     let textConsumGaddaF4Ultim = document.getElementById("textConsumGaddaF4Ultim");
-    let textBlockDataOraRaportFacut
+    let textIndexEltiUltim = document.getElementById("textIndexEltiUltim");
+    let textConsumEltiUltim = document.getElementById("textConsumEltiUltim");
 
     // Refresh parameters
     setInterval(function () {
@@ -106,6 +122,11 @@
                 BtnsPlcCreationStatusGaddaF4(response.isCreatedPlcGaddaF4);
                 // Functie Actualizare Culoare butoane Connect/ Deconnect Plc GaddaF4
                 BtnsPlcConnectionStatusGaddaF4(response.isConnectedPlcGaddaF4);
+                // Functie Actualizare Culoare butoane Creare/ Stergere Plc Elti
+                BtnsPlcCreationStatusElti(response.isCreatedPlcElti);
+                // Functie Actualizare Culoare butoane Connect/ Deconnect Plc Elti
+                BtnsPlcConnectionStatusElti(response.isConnectedPlcElti);
+
                 // Actualizare ultimele valori Index citite
                 console.log("Index cuptor: " + response.textBlockIndexCuptor.toString());
                 //console.log("Raspuns: " + "Ce vreau eu");
@@ -113,12 +134,15 @@
                 textIndexCuptorUltim.innerHTML = response.textBlockIndexCuptor.toString();
                 textIndexGaddaF2Ultim.innerHTML = response.textBlockIndexGaddaF2.toString();
                 textIndexGaddaF4Ultim.innerHTML = response.textBlockIndexGaddaF4.toString();
+                textIndexEltiUltim.innerHTML = response.textBlockIndexElti.toString();
                 textConsumCuptorUltim.innerHTML = response.textBlockConsumCuptor.toString();
                 textConsumGaddaF2Ultim.innerHTML = response.textBlockConsumGaddaF2.toString();
                 textConsumGaddaF4Ultim.innerHTML = response.textBlockConsumGaddaF4.toString();
+                textConsumEltiUltim.innerHTML = response.textBlockConsumElti.toString();
                 textOraDataRaportFacutCuptor.innerHTML = response.textBlockDataOraRaportFacut.toString();
                 textOraDataRaportFacutGaddaF2.innerHTML = response.textBlockDataOraRaportFacut.toString();
                 textOraDataRaportFacutGaddaF4.innerHTML = response.textBlockDataOraRaportFacut.toString();
+                textOraDataRaportFacutElti.innerHTML = response.textBlockDataOraRaportFacut.toString();
 
                 //response.textBlockDataOraRaportFacut.toString();
 
@@ -449,6 +473,98 @@ btnCheckIpPlcGaddaF4.addEventListener('click', function () {
     });
 });
 
+// Butoane comenzi Plc Elti
+// Buton Create Plc Elti Click event
+btnCreatePlcElti.addEventListener('click', function () {
+    //alert("s-a apasat buton start");
+    $.ajax({
+        url: " /Home/CreatePlcElti",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Create Plc Elti din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Create Plc Elti");
+        }
+    });
+});
+// Buton Delete Plc Elti Click event
+btnDeletePlcElti.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/DeletePlcElti",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Delete plc Elti din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Delete Plc Elti");
+        }
+    });
+});
+// Buton Connect Plc Elti Click event
+btnConnectPlcElti.addEventListener('click', function () {
+    //alert("s-a apasat buton start");
+    $.ajax({
+        url: " /Home/ConnectPlcElti",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Connect Plc Elti din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Connect Plc Elti");
+        }
+    });
+});
+// Buton Deconnect Plc Elti Click event
+btnDeconnectPlcElti.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/DeconnectPlcElti",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat Deconnect plc Elti din buton");
+        },
+        error: function (response) {
+            console.log("Nu a mers btn Deconnect Plc Elti");
+        }
+    });
+});
+// Buton Check Ip Plc Elti Click event
+btnCheckIpPlcElti.addEventListener('click', function () {
+    $.ajax({
+        url: " /Home/CheckIpPlcElti",
+        type: 'GET',
+        success: function (response) {
+            console.log("S-a realizat CheckIP plc Elti din buton");
+            //console.log(response);
+            // Verificam daca Plc-ul este conectat
+            if (response) {
+                // Verificam daca deja butonul indica ca serviciul e pornit
+                // Daca nu indica, ii adaugam clasa ca sa indice
+                if (!btnCheckIpPlcElti.classList.contains("btn-success")) {
+                    if (btnCheckIpPlcElti.classList.contains("btn-info"))
+                        btnCheckIpPlcElti.classList.remove("btn-info");
+                    btnCheckIpPlcElti.classList.add("btn-success");
+                }// Verificam daca butonul stop indica ca este oprit
+                // Daca este il facem sa nu mai indice
+                if (btnCheckIpPlcElti.classList.contains("btn-danger"))
+                    btnCheckIpPlcElti.classList.remove("btn-danger");
+            } else {
+                if (btnCheckIpPlcElti.classList.contains("btn-success"))
+                    btnCheckIpPlcElti.classList.remove("btn-succes");
+                if (btnCheckIpPlcElti.classList.contains("btn-info"))
+                    btnCheckIpPlcElti.classList.remove("btn-info");
+                if (!btnCheckIpPlcElti.classList.contains("btn-danger"))
+                    btnCheckIpPlcElti.classList.add("btn-danger");
+            }
+        },
+        error: function (response) {
+            console.log("Nu a mers btn CheckIP Plc Elti");
+        }
+    });
+});
+
+
+
 // Setare si afisare ListaMail OraRaport Plc Cuptor
 // Buton Set ListaMail si OraRaport Plc Cuptor Click event
 btnSetareMailCuptor.addEventListener('click', function () {
@@ -698,4 +814,45 @@ function BtnsPlcConnectionStatusGaddaF4(isConnectedPlcGaddaF4) {
     }
 }
 
+// PLC ELTI
+// Functie setare culoare background btns Creare/ stergere Plc Elti
+function BtnsPlcCreationStatusElti(isCreatedPlcElti) {
+    // Verificam daca serviciu este pornit
+    if (isCreatedPlcElti) {
+        // Verificam daca deja butonul indica ca serviciul e pornit
+        // Daca nu indica, ii adaugam clasa ca sa indice
+        if (!btnCreatePlcElti.classList.contains("btn-success"))
+            btnCreatePlcElti.classList.add("btn-success");
+        // Verificam daca butonul stop indica ca este oprit
+        // Daca este il facem sa nu mai indice
+        if (btnDeletePlcElti.classList.contains("btn-danger"))
+            btnDeletePlcElti.classList.remove("btn-danger");
+    }
+    else { // La fel si daca nu merge serviciul
+        if (btnCreatePlcElti.classList.contains("btn-success"))
+            btnCreatePlcElti.classList.remove("btn-success");
+        if (!btnDeletePlcElti.classList.contains("btn-danger"))
+            btnDeletePlcElti.classList.add("btn-danger");
+    }
+}
 
+// Functie setare culoare background btns Connect/ Deconnect Plc Elti
+function BtnsPlcConnectionStatusElti(isConnectedPlcElti) {
+    // Verificam daca Plc-ul este conectat
+    if (isConnectedPlcElti) {
+        // Verificam daca deja butonul indica ca serviciul e pornit
+        // Daca nu indica, ii adaugam clasa ca sa indice
+        if (!btnConnectPlcElti.classList.contains("btn-success"))
+            btnConnectPlcElti.classList.add("btn-success");
+        // Verificam daca butonul stop indica ca este oprit
+        // Daca este il facem sa nu mai indice
+        if (btnDeconnectPlcElti.classList.contains("btn-danger"))
+            btnDeconnectPlcElti.classList.remove("btn-danger");
+    }
+    else { // La fel si daca nu merge serviciul
+        if (btnConnectPlcElti.classList.contains("btn-success"))
+            btnConnectPlcElti.classList.remove("btn-success");
+        if (!btnDeconnectPlcElti.classList.contains("btn-danger"))
+            btnDeconnectPlcElti.classList.add("btn-danger");
+    }
+}

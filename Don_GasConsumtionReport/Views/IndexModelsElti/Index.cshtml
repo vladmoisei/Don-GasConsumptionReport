@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Don_GasConsumtionReport.IndexModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<div>
+    <p>Selectare perioada raportare in excel</p>
+    <label for="from">From</label>
+    <input type="text" id="from" name="from">
+    <label for="to">to</label>
+    <input type="text" id="to" name="to">
+</div>
+<p>
+    <a id="downloadToExcel" asp-action="ExportToExcelAsync">Exporta in excel</a>
+</p>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Data)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlcName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IndexValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GazValue)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Data)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PlcName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IndexValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GazValue)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@* Section for UI Datepicker from Jquery*@
+@section JQueryUI
+    {
+    @*<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">*@
+    @*<link rel="stylesheet" href="/resources/demos/style.css">*@
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="~/js/datepickerJquery.js"></script>
+}
