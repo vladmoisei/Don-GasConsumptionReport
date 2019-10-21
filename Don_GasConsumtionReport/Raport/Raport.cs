@@ -46,8 +46,9 @@ namespace Don_GasConsumtionReport
                 ListaPlc = new List<PlcObjectModel>()
             };
             // Initializare proprietati
-            ListaMailCuptor = "v.moisei@beltrame-group.com";
-            ListaMailGadda = "v.moisei@beltrame-group.com";
+            ListaMailCuptor = "v.moisei@beltrame-group.com, a.cernat@beltrame-group.com, " +
+                "m.mitran@beltrame-group.com, b.mitran@beltrame-group.com, i.sutu@donalam.ro, i.micu@donalam.ro";
+            ListaMailGadda = "v.moisei@beltrame-group.com, m.chiru@beltrame-group.com";
             OraRaportCuptor = "06:59:00";
             OraRaportGadda = "06:59:00";
             DataOraRaportFacut = "0";
