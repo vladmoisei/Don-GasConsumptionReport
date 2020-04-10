@@ -14,7 +14,8 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        @*<link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />*@
+        <link rel="stylesheet" href="~/css/site.css" />
     </environment>
 </head>
 <body>
@@ -27,7 +28,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Don_GasConsumtionReport</a>
+                @*<a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Don_GasConsumtionReport</a>*@
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/ImagDonalam.png" alt="Dashboard Utilaje Ajustaj" class="imagine"/>
+                </a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -36,8 +40,8 @@
                     <li><a asp-area="" asp-controller="IndexModelsGaddaF2" asp-action="Index">Index GaddaF2</a></li>
                     <li><a asp-area="" asp-controller="IndexModelsGaddaF4" asp-action="Index">Index GaddaF4</a></li>
                     <li><a asp-area="" asp-controller="IndexModelsElti" asp-action="Index">Index Elti</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    @*<li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
                 </ul>
             </div>
         </div>
@@ -49,7 +53,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2019 - Don_GasConsumtionReport</p>
+            <p>&copy; 2019 - Vlad Moisei</p>
         </footer>
     </div>
 

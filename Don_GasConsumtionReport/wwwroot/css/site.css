@@ -35,3 +35,14 @@ body {
         display: none;
     }
 }
+
+/* Added by me*/
+
+.imagine {
+    height: 51px;
+    border-radius: 5px;
+}
+
+.navbar-header {
+    height: 72px;
+}
