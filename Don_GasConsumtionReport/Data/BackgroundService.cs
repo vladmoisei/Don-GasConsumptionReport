@@ -25,7 +25,7 @@ namespace Don_GasConsumtionReport
         public bool IsStartedService { get; set; } = false;
         // Lista mail
         public string ListaTrimitereMail { get; set; } = "v.moisei@beltrame-group.com, a.cernat@beltrame-group.com, "+
-                "m.mitran@beltrame-group.com, b.mitran@beltrame-group.com, i.sutu@donalam.ro, i.micu@donalam.ro";
+                "m.mitran@beltrame-group.com, b.mitran@beltrame-group.com, i.sutu@donalam.ro, i.micu@donalam.ro, m.apopei@donalam.ro";
         // Ora Raportare
         public string OraTrimitereMail { get; set; } = "06:59:00";
 
